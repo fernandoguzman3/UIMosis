@@ -1,7 +1,11 @@
 import tkinter as tk
-
+from SensorModeUI import tryf
 HEIGHT = 380
 WIDTH = 600
+
+def test_function():
+    print("works")
+
 
 root = tk.Tk()
 
@@ -21,7 +25,7 @@ gallery_button.pack()
 
 frame = tk.Frame(root)
 frame.place(relx=.15, rely=.6)
-sensor_mode_button = tk.Button(frame, text="Sensor Mode", width=18, bg='blue')
+sensor_mode_button = tk.Button(frame, text="Sensor Mode", width=18, bg='blue', command=tryf)
 sensor_mode_button.pack()
 
 frame = tk.Frame(root)
@@ -36,3 +40,4 @@ back_button.pack()
 
 
 root.mainloop()
+
