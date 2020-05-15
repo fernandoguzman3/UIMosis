@@ -2,6 +2,7 @@
 from __future__ import print_function
 from PIL import Image
 from PIL import ImageTk
+from PIL import ImageEnhance
 import tkinter as tki
 import threading
 import logging
@@ -30,27 +31,113 @@ class PhotoBoothApp:
         self.root = tki.Tk()
     #    self.root.maxsize(900, 600)
     #    self.root.minsize(900, 600)
-        self.root.geometry("%dx%d+0+0" % (600, 600))
+        self.root.geometry("%dx%d+0+0" % (680, 600))
         self.upper_panel = None
         self.image = None
-        self.imageW = 800
-        self.imageH = 500
+        self.imageW = 640
+        self.imageH = 480
         self.imageSize = 800
         
-        lower_panel = tki.Frame(self.root, width=200, height= 400, bg='grey')
-        lower_panel.pack(side="bottom", fill="none", padx=10, pady=10)
-        
-        zoomScale = tki.Scale(lower_panel, from_=1, to=10, orient=tki.HORIZONTAL, label = "Zoom", command = self.setZoom)
-        zoomScale.pack(side="left", fill="none", padx=10, pady=10)
-        
+        #--------- UI elements variables
         self.zoom = False
         self.zoomValue = 1
+        self.saturationValue = float(1)
+        self.exposureValue = float(1)
+        self.brightValue = float(0.2)
+        self.sysMode = tki.StringVar()
+        self.ledMode = tki.StringVar()
         
+        #---------------- LOWER PANEL----------------------------------#
+        
+         #lower panel to house the picture scales, led, mode and sensor info
+        lower_panel = tki.Frame(self.root, bg='#46637B')
+        lower_panel.pack(side="bottom", fill="both", padx=2, pady=2)
+        
+        #---------------- Scales PANEL----------------------------------#
+        
+        #panel for the scales
+        scale_panel = tki.Frame(lower_panel, bg='#004000')
+        scale_panel.pack(side="left", fill="both", padx=2, pady=2)        
+        
+        params_label = tki.Label(scale_panel, text= "Camera Frame params: ")
+        params_label.pack(side="top",fill="x", padx=5, pady=5)
+        
+        #panel for the scales
+        sub_scale_panelL = tki.Frame(scale_panel, bg='#004000')
+        sub_scale_panelL.pack(side="left", fill="both", padx=5, pady=5)
+        
+        #panel for the scales
+        sub_scale_panelR = tki.Frame(scale_panel, bg='#004000')
+        sub_scale_panelR.pack(side="left", fill="both", padx=5, pady=5)
+        
+        zoomScale = tki.Scale(sub_scale_panelL, from_=1, to=5, orient=tki.HORIZONTAL, width= 5, troughcolor= "#004000", bg='#84A1B9',label = "Zoom", command = self.setZoom)
+        zoomScale.pack(side="top", fill="none", padx=2, pady=2)
+        
+        exposureScale = tki.Scale(sub_scale_panelL, from_=0.2, to=3.0, resolution=0.20, orient=tki.HORIZONTAL, width= 5, troughcolor= "#004000", bg='#84A1B9',label = "Exposure", command = self.setExposure)
+        exposureScale.pack(side="top", fill="none", padx=2, pady=2)
+        
+        saturationScale = tki.Scale(sub_scale_panelR, from_=0.2, to=8, resolution=0.20, orient=tki.HORIZONTAL, width= 5,troughcolor= "#004000", bg='#84A1B9',label = "Saturation", command = self.setSaturation)
+        saturationScale.pack(side="top", fill="none", padx=2, pady=2)
+        
+        brightnessScale = tki.Scale(sub_scale_panelR, from_=1, to=120, orient=tki.HORIZONTAL, width= 5,troughcolor= "#004000", bg='#84A1B9',label = "Brightness", command = self.setBrightness)
+        brightnessScale.pack(side="top", fill="none", padx=2, pady=2)
+        
+        #---------------- Mode configuration PANEL----------------------------------#
+        
+        #panel for led / mode info
+        modeConfig_panel = tki.Frame(lower_panel, bg='#004000', width=50, height=50)
+        modeConfig_panel.pack(side="left", fill="both", padx=2, pady=2) 
+        
+        modeConfig_panelU = tki.Frame(modeConfig_panel, bg='#004000',width=25, height=50)
+        modeConfig_panelU.pack(side="left", fill="both",padx=5, pady=5)
+        
+        modeConfig_panelR = tki.Frame(modeConfig_panel, bg='#004000',width=25, height=50)
+        modeConfig_panelR.pack(side="left", fill="both", padx=5, pady=5)
+        
+        mode_label = tki.Label(modeConfig_panelU, text= "Mode: ", width= 10)
+        mode_label.pack( fill="both", padx=2, pady=2)
+        
+        mode_var_label = tki.Label(modeConfig_panelU, textvariable = self.sysMode, bg="#84A1B9")
+        mode_var_label.pack( fill="both", padx=2, pady=2)
+        
+        LED_mode_label = tki.Label(modeConfig_panelR, text= "LED light selected: ")
+        LED_mode_label.pack(fill="both", padx=2, pady=2)
+        
+        LED_var_label = tki.Label(modeConfig_panelR, textvariable = self.ledMode, bg="#84A1B9")
+        LED_var_label.pack( fill="both", padx=2, pady=2)
+        
+        #---------------- Sensor PANEL----------------------------------#
+        
+        #panel for the activated sensors
+        sensor_panel = tki.Frame(lower_panel, bg='#004000', width=200, height=100)
+        sensor_panel.pack(side="left", fill="both", padx=2, pady=2)
+        
+        act_sensor_label = tki.Label(sensor_panel, text= "Active Sensors")
+        act_sensor_label.pack(side="top", fill="both", padx=5, pady=5)
+        
+        sensor_panelU = tki.Frame(sensor_panel, bg='#004000',width=90)
+        sensor_panelU.pack(side="left", fill="both", padx=5, pady=5)
+        
+        sensor_panelR = tki.Frame(sensor_panel, bg='#004000', width=100)
+        sensor_panelR.pack(side="left", fill="both", padx=5, pady=5)
+        
+        PH_label = tki.Button(sensor_panelU, text= "PH",  bg='#84A1B9')
+        PH_label.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Pressure_label = tki.Button(sensor_panelU, text= 'Pressure', bg='#84A1B9')
+        Pressure_label.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Temp_label = tki.Button(sensor_panelR, text= "Temp", bg='#84A1B9')
+        Temp_label.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Lumin_label = tki.Button(sensor_panelR, text="Lumin", bg='#84A1B9')
+        Lumin_label.pack(side="top", fill="both", padx=5, pady=5)
+#         
         # create a button, that when pressed, will take the current
         # frame and save it to file
         
         btn = tki.Button(lower_panel, text="Snapshot!", command=self.takeSnapshot)
-        btn.pack(side="left", fill="none", padx=10, pady=10)
+        btn.pack(side="left", fill="none", padx=2, pady=2)
         
         # start a thread that constantly pools the video sensor for
         # the most recently read frame
@@ -79,39 +166,29 @@ class PhotoBoothApp:
                 
                 self.frame = self.vs.read()
                 
-                #print(self.zoomValue)
-              #  if self.zoomValue == int(1):
-              #      self.frame = imutils.resize(self.frame, width=self.imageW, height=self.imageH)
-                  #  print('original preview')
-                
-              #  else:
                 self.frame = self.Zoom(self.frame)
-                   #  print('zoomed preview')
-                
-                self.image = cv2.cvtColor(self.frame,cv2.COLOR_BGR2HSV)
-
-                #multiple by a factor to change the saturation
-                self.image[...,1] = self.image[...,1]*2.5
-
-                #multiple by a factor of less than 1 to reduce the brightness 
-                self.image[...,2] = self.image[...,2]*1
-
-                self.image=cv2.cvtColor(self.image,cv2.COLOR_HSV2RGB)
                 
               #  self.frame = imutils.resize(self.frame, width=self.imageSize)
                 # OpenCV represents images in BGR order; however PIL
                 # represents images in RGB order, so we need to swap
                 # the channels, then convert to PIL and ImageTk format
-               # self.image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
-               # self.image = cv2.addWeighted(self.frame, 1, np.zeros(self.frame.shape, self.frame.dtype), 0, 10)
+                self.image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+              
+                #set saturation and exposure values
+               # self.image = self.setSaturationAndExposure(self.image)
+                self.image = self.ImageExposureandBrightness(self.image)
+              
                 self.image = Image.fromarray(self.image)
+                
+                self.image = self.ImageSaturation(self.image)
+                
                 self.image = ImageTk.PhotoImage(self.image)
         
                 # if the panel is not None, we need to initialize it
                 if self.upper_panel is None:
-                    self.upper_panel = tki.Label(image=self.image )
+                    self.upper_panel = tki.Label(image=self.image)
                     self.upper_panel.image = self.image
-                    self.upper_panel.pack(side="top", padx=10, pady=10)
+                    self.upper_panel.pack(side="top", padx=2, pady=2)
         
                 # otherwise, simply update the panel
                 else:
@@ -133,10 +210,10 @@ class PhotoBoothApp:
         if zoomedWidth < self.imageW:
             zoomedWidth = self.imageW
             zoomedHeight = self.imageH
-        
+            
         cv2Object = imutils.resize(cv2Object, width=zoomedWidth, height=zoomedHeight)
-        
         if(self.zoomValue != 1):
+          #  print('cv2objsize_in:', cv2Object.shape[0], " ", cv2Object.shape[1])
             # center is simply half of the height & width (y/2,x/2)
             center = (cv2Object.shape[0]/2,cv2Object.shape[1]/2)
             # cropScale represents the top left corner of the cropped frame (y/x)
@@ -145,13 +222,35 @@ class PhotoBoothApp:
             # image[y1:y2,x1:x2] is used to iterate and grab a portion of an image
             # (y1,x1) is the top left corner and (y2,x1) is the bottom right corner of new cropped frame.
             cv2Object = cv2Object[int(cropScale[0]):int((center[0] + cropScale[0])), int(cropScale[1]):int((center[1] + cropScale[1]))]
-        
-       # cv2Object = imutils.resize(cv2Object, width=zoomedWidth, height=zoomedHeight)
+          #  cv2Object = imutils.resize(cv2Object, width=zoomedWidth, height=zoomedHeight)
+           
+            #its a pretty bad hack, but it aint working otherwise
+            if(int(cv2Object.shape[1]) < int(self.imageW)):
+                 cv2Object = imutils.resize(cv2Object, width=self.imageW, height=self.imageH)
+
         return cv2Object
 
     def setZoom(self, var):
         self.zoomValue = int(var)
-        #print("zoom Value: ", self.zoomValue)
+
+    def setSaturation(self, var):
+        self.saturationValue = float(var)
+
+    def setExposure(self, var):
+        self.exposureValue = float(var)
+     
+    def setBrightness(self, var):
+        self.brightValue = float(var)
+        
+    def ImageSaturation(self, frame):
+        converter = ImageEnhance.Color(frame)
+        image = converter.enhance(self.saturationValue)
+        return image
+        
+    def ImageExposureandBrightness(self,frame):
+        image = cv2.addWeighted(frame, self.exposureValue, np.zeros(self.frame.shape, self.frame.dtype), 0, self.brightValue)
+        
+        return image
 
     def takeSnapshot(self):
             # grab the current timestamp and use it to construct the
@@ -170,3 +269,4 @@ class PhotoBoothApp:
             self.stopEvent.set()
             self.vs.stop()
             self.root.quit()
+
