@@ -26,7 +26,7 @@ class App(Tk):
         for F in (StartPage, PageOne, PageTwo):
             frame = F(container, self)
             self.frames[F] = frame
-            frame.grid(row=0, column=1)
+            frame.grid(row=0, column=1, rowspan=4)
 
         self.show_frame(StartPage)
 
