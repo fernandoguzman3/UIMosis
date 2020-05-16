@@ -1,11 +1,11 @@
 import tkinter as tki
 
 class CaptureModeUI:
-    def __init__(self):
+    def __init__(self, root):
         
          # initialize the root window and image panel
-        self.root = tki.Tk()
-        self.root.geometry("%dx%d+0+0" % (680, 600))
+        self.root = root
+      #  self.root.geometry("%dx%d+0+0" % (680, 600))
         
        # self.root = root
         self.camRBVar = tki.IntVar()
@@ -109,8 +109,8 @@ class CaptureModeUI:
         fill_label2 = tki.Label(master_panel, bg='#46637B', height=2)
         fill_label2.pack(side="top",fill="both", padx=20, pady=10)
         
-        self.root.mainloop()
+       # self.root.mainloop()
 
-CaptureModeUI()
+#CaptureModeUI()
 
         
