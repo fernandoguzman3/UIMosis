@@ -9,7 +9,7 @@ class Page(tk.Frame):
         self.lift()
 
 class Page1(Page):
-   def __init__(self, *args, **kwargs):
+   def __init__(self,*args, **kwargs):
        Page.__init__(self, *args, **kwargs)
        MainMenuUI(self)
 
@@ -30,17 +30,62 @@ class MainView(tk.Frame):
         captureMode = Page2(self)
         mainMenu= Page1(self)
         p3 = Page3(self)
+        
+         # initialize the root window and image panel
+        #self.root = root
+       # self.root.geometry("%dx%d+0+0" % (680, 600))
+        
+        master_panel = tk.Frame(self, bg='#46637B',height=600, width=800)
+        master_panel.pack(anchor="w", fill="both", expand=False, side="left")
+        
+        #----------------- Firstmost panel -------------------------------
+        ocusis_label = tk.Label(master_panel, text= "OCUSIS", bg='#46637B', fg='white', font=("Courier", 24))
+        ocusis_label.pack(fill="both", padx=20, pady=20)
+        
+        panel1 = tk.Frame(master_panel, bg='#84A1B9')
+        panel1.pack(fill="both", padx=10, pady=10)
+        
+        mainMenu_label = tk.Label(panel1, text= "Main Menu ", bg='#84A1B9', fg='white', font=("Courier", 24))
+        mainMenu_label.pack(side="left",fill="both", padx=20, pady=20)
+        
+        back_button = tk.Button(panel1, text= "Back")
+        back_button.pack(side = "right", fill="both", padx=5, pady=5)
+        
+        fill_label = tk.Label(master_panel, text= "", height=1, bg="grey")
+        fill_label.pack(fill="x", padx=5, pady=5)
+        
+        # ---------------- Second Panel ----------------------------------
+        panel2 = tk.Frame(master_panel, bg='#84A1B9')
+        panel2.pack(fill="both", padx=20, pady=20)
+        
+        captureMode_btn = tk.Button(panel2, text= "Capture Mode", width=10, height= 5, bg='#46637B', fg='white', font=("Courier", 14),
+                                    command=captureMode.lift)
+        captureMode_btn.pack(side="left",fill="both", padx=90, pady=10)
+        
+        gallery_btn = tk.Button(panel2, text= "Gallery",bg='#46637B', width=10, height= 5, fg='white', font=("Courier", 14))
+        gallery_btn.pack(side="left",fill="both", padx=100, pady=10)
 
+        # ---------------- Third Panel ----------------------------------
+        panel3 = tk.Frame(master_panel, bg='#84A1B9')
+        panel3.pack(fill="both", padx=20, pady=20)
+        
+        sensorMode_btn = tk.Button(panel3, text= "Sensor Mode", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 14))
+        sensorMode_btn.pack(side="left",fill="both", padx=90, pady=10)
+        
+        diagnostics_btn = tk.Button(panel3, text= "Diagnostics", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 14))
+        diagnostics_btn.pack(side="left",fill="both", padx=100, pady=10)
+ #---------------------------------------------------------------------------------------------------------
+        
         buttonframe = tk.Frame(self)
         container = tk.Frame(self)
         buttonframe.pack(side="top", fill="x", expand=False)
         container.pack(side="top", fill="both", expand=True)
 
-        mainMenu.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        master_panel.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         captureMode.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         p3.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
 
-        b1 = tk.Button(buttonframe, text="Main Menu", command=mainMenu.lift)
+        b1 = tk.Button(buttonframe, text="Main Menu", command=master_panel.lift)
         b2 = tk.Button(buttonframe, text="Capture Mode", command=captureMode.lift)
         b3 = tk.Button(buttonframe, text="Page 3", command=p3.lift)
 
@@ -48,7 +93,7 @@ class MainView(tk.Frame):
         b2.pack(side="left")
         b3.pack(side="left")
 
-        mainMenu.show()
+        master_panel.lift()
 
 if __name__ == "__main__":
     root = tk.Tk()
