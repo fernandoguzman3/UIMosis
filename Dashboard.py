@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 import os
 
-class PhotoBoothApp:
+class Dashboard:
     def __init__(self, vs, outputPath):
         logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
@@ -37,6 +37,7 @@ class PhotoBoothApp:
         self.imageW = 640
         self.imageH = 480
         self.imageSize = 800
+        self.processedImage = None
         
         #--------- UI elements variables
         self.zoom = False
@@ -89,22 +90,27 @@ class PhotoBoothApp:
         modeConfig_panel.pack(side="left", fill="both", padx=2, pady=2) 
         
         modeConfig_panelU = tki.Frame(modeConfig_panel, bg='#004000',width=25, height=50)
-        modeConfig_panelU.pack(side="left", fill="both",padx=5, pady=5)
+        modeConfig_panelU.pack(side="top", fill="x",padx=5, pady=5)
         
-        modeConfig_panelR = tki.Frame(modeConfig_panel, bg='#004000',width=25, height=50)
-        modeConfig_panelR.pack(side="left", fill="both", padx=5, pady=5)
+        modeConfig_panelL = tki.Frame(modeConfig_panel, bg='#004000',width=25, height=50)
+        modeConfig_panelL.pack(side="top", fill="x", padx=5, pady=5)
+        
+         # create a button, that when pressed, will take the current
+        # frame and save it to file
+        btn = tki.Button(modeConfig_panel, text="Snapshot!", command=self.takeSnapshot)
+        btn.pack(side="bottom", fill="none", padx=2, pady=2)
         
         mode_label = tki.Label(modeConfig_panelU, text= "Mode: ", width= 10)
-        mode_label.pack( fill="both", padx=2, pady=2)
+        mode_label.pack(side = "left",fill="both", padx=2, pady=2)
         
-        mode_var_label = tki.Label(modeConfig_panelU, textvariable = self.sysMode, bg="#84A1B9")
-        mode_var_label.pack( fill="both", padx=2, pady=2)
+        mode_var_label = tki.Label(modeConfig_panelL, textvariable = self.sysMode, bg="#84A1B9", width = 10)
+        mode_var_label.pack(side = "left", fill="both", padx=2, pady=2)
         
-        LED_mode_label = tki.Label(modeConfig_panelR, text= "LED light selected: ")
-        LED_mode_label.pack(fill="both", padx=2, pady=2)
+        LED_mode_label = tki.Label(modeConfig_panelU, text= "LED mode: ")
+        LED_mode_label.pack(side = "left",fill="both", padx=2, pady=2)
         
-        LED_var_label = tki.Label(modeConfig_panelR, textvariable = self.ledMode, bg="#84A1B9")
-        LED_var_label.pack( fill="both", padx=2, pady=2)
+        LED_var_label = tki.Label(modeConfig_panelL, textvariable = self.ledMode, bg="#84A1B9", width = 10)
+        LED_var_label.pack(side = "left",fill="both", padx=2, pady=2)
         
         #---------------- Sensor PANEL----------------------------------#
         
@@ -132,12 +138,6 @@ class PhotoBoothApp:
         
         Lumin_label = tki.Button(sensor_panelR, text="Lumin", bg='#84A1B9')
         Lumin_label.pack(side="top", fill="both", padx=5, pady=5)
-#         
-        # create a button, that when pressed, will take the current
-        # frame and save it to file
-        
-        btn = tki.Button(lower_panel, text="Snapshot!", command=self.takeSnapshot)
-        btn.pack(side="left", fill="none", padx=2, pady=2)
         
         # start a thread that constantly pools the video sensor for
         # the most recently read frame
@@ -177,10 +177,13 @@ class PhotoBoothApp:
                 #set saturation and exposure values
                # self.image = self.setSaturationAndExposure(self.image)
                 self.image = self.ImageExposureandBrightness(self.image)
-              
-                self.image = Image.fromarray(self.image)
                 
+          
+                self.image = Image.fromarray(self.image)
+         
                 self.image = self.ImageSaturation(self.image)
+                
+                self.processedImage = self.image
                 
                 self.image = ImageTk.PhotoImage(self.image)
         
@@ -255,11 +258,15 @@ class PhotoBoothApp:
     def takeSnapshot(self):
             # grab the current timestamp and use it to construct the
             # output path
+            if(self.processedImage is None):
+                return
             ts = datetime.datetime.now()
             filename = "{}.jpg".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
             p = os.path.sep.join((self.outputPath, filename))
+            image = self.processedImage.convert('RGB')
             # save the file
-            cv2.imwrite(p, self.frame.copy())
+            image.save(p)
+            #cv2.imwrite(p, image)
             print("[INFO] saved {}".format(filename))       
     
     def onClose(self):
