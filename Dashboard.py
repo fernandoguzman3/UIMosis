@@ -13,7 +13,7 @@ import numpy as np
 import os
 
 class Dashboard:
-    def __init__(self, vs, outputPath):
+    def __init__(self,outputPath, root, vs):
         logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
                     )
@@ -28,11 +28,10 @@ class Dashboard:
         self.stopEvent = None
         
         # initialize the root window and image panel
-        self.root = tki.Tk()
-    #    self.root.maxsize(900, 600)
-    #    self.root.minsize(900, 600)
-        self.root.geometry("%dx%d+0+0" % (680, 600))
+        self.root = root
+        #self.root.geometry("%dx%d+0+0" % (680, 600))
         self.upper_panel = None
+        self.master_panel = None
         self.image = None
         self.imageW = 640
         self.imageH = 480
@@ -48,10 +47,15 @@ class Dashboard:
         self.sysMode = tki.StringVar()
         self.ledMode = tki.StringVar()
         
+    def initializeDashboard(self):
+        
+        self.master_panel = tki.Frame(self.root, bg='#46637B',height=600, width=800)
+        self.master_panel.pack(fill="both")
+        
         #---------------- LOWER PANEL----------------------------------#
         
          #lower panel to house the picture scales, led, mode and sensor info
-        lower_panel = tki.Frame(self.root, bg='#46637B')
+        lower_panel = tki.Frame(self.master_panel, bg='#46637B')
         lower_panel.pack(side="bottom", fill="both", padx=2, pady=2)
         
         #---------------- Scales PANEL----------------------------------#
@@ -146,12 +150,16 @@ class Dashboard:
         self.thread.start()
         
         # set a callback to handle when the window is closed
-        self.root.wm_title("PyImageSearch PhotoBooth")
-        self.root.wm_protocol("WM_DELETE_WINDOW", self.onClose)
+       # self.root.wm_title("PyImageSearch PhotoBooth")
+       # self.root.rotocol("WM_DELETE_WINDOW", self.onClose)
         
-        self.root.mainloop()
+        print(type(self.master_panel))
+        return self.master_panel
+        
+       # self.root.mainloop()
 
     def videoLoop(self):
+        self.vs.start()
         logging.debug('starting')
         # DISCLAIMER:
         # I'm not a GUI developer, nor do I even pretend to be. This
@@ -189,7 +197,7 @@ class Dashboard:
         
                 # if the panel is not None, we need to initialize it
                 if self.upper_panel is None:
-                    self.upper_panel = tki.Label(image=self.image)
+                    self.upper_panel = tki.Label(self.master_panel,image=self.image)
                     self.upper_panel.image = self.image
                     self.upper_panel.pack(side="top", padx=2, pady=2)
         
@@ -276,4 +284,7 @@ class Dashboard:
             self.stopEvent.set()
             self.vs.stop()
             self.root.quit()
-
+    
+    def getMasterPanel():
+        print(type(self.master_panel))
+        return self.master_panel

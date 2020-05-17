@@ -1,10 +1,9 @@
 import tkinter as tki
 
-
 class MainMenuUI:
     def __init__(self, root):
         
-         # initialize the root window and image panel
+        # initialize the root window and image panel
         self.root = root
        # self.root.geometry("%dx%d+0+0" % (680, 600))
         
