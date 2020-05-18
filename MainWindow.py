@@ -18,15 +18,27 @@ class mainMenu(Page):
        Page.__init__(self, *args, **kwargs)
        MainMenuUI(self)
 
-class captureMode(Page):
-   def __init__(self, *args, **kwargs):
-       Page.__init__(self, *args, **kwargs)
-       CaptureModeUI(self)
+class captureMode:
+   def __init__(self, root, *args, **kwargs):
+      # Page.__init__(self, *args, **kwargs)
+       self.page = CaptureModeUI(root)
 
-class sensorMode(Page):
-   def __init__(self, *args, **kwargs):
-       Page.__init__(self, *args, **kwargs)
-       SensorModeUI(self)
+   def returnPage(self):
+       return self.page.initializeCaptureMode()
+    
+   def getInstance(self):
+       return self.page
+
+class sensorMode:
+   def __init__(self, root, *args, **kwargs):
+      # Page.__init__(self, *args, **kwargs)
+       self.page = SensorModeUI(root)
+    
+   def returnPage(self):
+       return self.page.initializeSensorMode()
+    
+   def getInstance(self):
+       return self.page
 
 class gallery(Page):
    def __init__(self, *args, **kwargs):
@@ -34,7 +46,7 @@ class gallery(Page):
        Gallery(self)
 
 class dashboard:
-    def __init__(self, root):
+    def __init__(self, root, capture, sensor):
     #   Page.__init__(self, *args, **kwargs)
     # initialize the video stream and allow the camera sensor to warmup
        print("[INFO] warming up camera...")
@@ -42,11 +54,9 @@ class dashboard:
        outputFolder = "Media/Images"
        # start the app
        vs = VideoStream(usePiCamera=False)
-       self.page = Dashboard(outputFolder, root, vs)
+       self.page = Dashboard(outputFolder, root, vs, capture, sensor)
        
     def returnPage(self):
-        print(type(self.page))
-       # print(type(self.page.initalizeDashboard(root,vs)))
         return self.page.initializeDashboard()
 
 class MainView(tk.Frame):
@@ -55,9 +65,8 @@ class MainView(tk.Frame):
         root = tk.Tk()
         root.geometry("%dx%d+0+0" % (680, 600))
         gallery_panel = gallery(root)
-        captureMode_panel = captureMode(root)
+       # captureMode_panel = captureMode(root)
         mainMenu_panel = mainMenu(root)
-        sensorMode_panel = sensorMode(root)
     
          # initialize the root window and image panel
         #self.root = root
@@ -105,10 +114,14 @@ class MainView(tk.Frame):
         diagnostics_btn.pack(side="left",fill="both", padx=100, pady=10)
  #---------------------------------------------------------------------------------------------------------
         
-        d = dashboard(root)
-        print(type(d))
+        c = captureMode(root)
+        captureMode_panel = c.returnPage()
+        
+        s = sensorMode(root)
+        sensorMode_panel = s.returnPage()
+        
+        d = dashboard(root, c.getInstance(), s.getInstance())
         dashboard_panel = d.returnPage()
-        print(type(dashboard_panel))
         
         buttonframe = tk.Frame(root)
         container = tk.Frame(root)
@@ -139,8 +152,8 @@ class MainView(tk.Frame):
 if __name__ == "__main__":
 #     root = tk.Tk()
     main = MainView()
-    print(type(main))
 #     main.pack(side="top", fill="both", expand=True)
 #     root.geometry("%dx%d+0+0" % (680, 600))
    # dashboard(root)
 #     root.mainloop()
+

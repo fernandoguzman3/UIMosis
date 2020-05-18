@@ -7,13 +7,14 @@ import tkinter as tki
 import threading
 import logging
 import datetime
+import time
 import imutils
 import cv2
 import numpy as np
 import os
 
 class Dashboard:
-    def __init__(self,outputPath, root, vs):
+    def __init__(self, outputPath, root, vs, captureClass=None, sensorClass=None):
         logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
                     )
@@ -38,6 +39,9 @@ class Dashboard:
         self.imageSize = 800
         self.processedImage = None
         
+        self.captureInfo = captureClass
+        self.sensorInfo = sensorClass
+        
         #--------- UI elements variables
         self.zoom = False
         self.zoomValue = 1
@@ -46,6 +50,9 @@ class Dashboard:
         self.brightValue = float(0.2)
         self.sysMode = tki.StringVar()
         self.ledMode = tki.StringVar()
+        self.snapShotProgress = tki.StringVar()
+        
+        self.mode = None
         
     def initializeDashboard(self):
         
@@ -101,8 +108,11 @@ class Dashboard:
         
          # create a button, that when pressed, will take the current
         # frame and save it to file
-        btn = tki.Button(modeConfig_panel, text="Snapshot!", command=self.takeSnapshot)
+        btn = tki.Button(modeConfig_panel, text="Snapshot!", command=self.checkMode)
         btn.pack(side="bottom", fill="none", padx=2, pady=2)
+        
+        mode_label = tki.Label(modeConfig_panel, text= "", textvariable=self.snapShotProgress, width= 10,font=("Courier", 9))
+        mode_label.pack(side = "bottom",fill="x", padx=2, pady=2)
         
         mode_label = tki.Label(modeConfig_panelU, text= "Mode: ", width= 10)
         mode_label.pack(side = "left",fill="both", padx=2, pady=2)
@@ -153,7 +163,6 @@ class Dashboard:
        # self.root.wm_title("PyImageSearch PhotoBooth")
        # self.root.rotocol("WM_DELETE_WINDOW", self.onClose)
         
-        print(type(self.master_panel))
         return self.master_panel
         
        # self.root.mainloop()
@@ -172,6 +181,8 @@ class Dashboard:
                 # grab the frame from the video stream and resize it to
                 # have a maximum width of 300 pixels
                 
+                self.sysMode.set(self.getsystemMode())
+                
                 self.frame = self.vs.read()
                 
                 self.frame = self.Zoom(self.frame)
@@ -186,7 +197,6 @@ class Dashboard:
                # self.image = self.setSaturationAndExposure(self.image)
                 self.image = self.ImageExposureandBrightness(self.image)
                 
-          
                 self.image = Image.fromarray(self.image)
          
                 self.image = self.ImageSaturation(self.image)
@@ -262,15 +272,98 @@ class Dashboard:
         image = cv2.addWeighted(frame, self.exposureValue, np.zeros(self.frame.shape, self.frame.dtype), 0, self.brightValue)
         
         return image
+    
+    def checkMode(self):
+        pics = None
+        self.snapShotProgress.set("taking pic...")
+        print(self.snapShotProgress.get())
+        time.sleep(0.5)
+        if(self.mode == 1):
+            self.takeSnapshot(self.outputPath)
+            self.snapShotProgress.set("done!")
+        elif(self.mode == 2):
+            t1 = threading.Thread(name='t2',target=self.takeBurstSnapshot, args=(self.captureInfo.getBurstModeValues()))
+            t1.start()
+            t1.join()
+            logging.debug('joined burst mode thread')
+            self.snapShotProgress.set("done!")
+                
+        elif(self.mode == 3):
+            t1 = threading.Thread(name='t2',target=self.takeTimeIntervalSnapshot,
+                                  args=(self.captureInfo.getStepsValues(), self.captureInfo.getIntervalValues()))
+            logging.debug('start Tinterval mode thread')
+            t1.start()
+            t1.join()
+            logging.debug('joined Tinterval mode thread')
+            self.snapShotProgress.set("done!")
+    
+    def takeBurstSnapshot(self,pics):
+        logging.debug('start burst mode thread')
+        ts = datetime.datetime.now()
+        logging.debug('1')
+        picsRage = int(pics)
+#         pics = int(self.captureInfo.getBurstModeValues())
+        logging.debug('2')
+        foldername = "{}".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
+        outputPath = "Media/Images/Burst"
+        logging.debug('3')
+        p = os.path.sep.join((outputPath, foldername))
+        logging.debug('4')
+        os.makedirs(p)
+        logging.debug('into forloop')
+        for pic in range(picsRage):
+            self.takeSnapshot(p)
+            time.sleep(0.5)
+       # self.snapShotProgress.set("done!")
+        logging.debug('done')
+        return
 
-    def takeSnapshot(self):
+    def takeTimeIntervalSnapshot(self,stepsVal,intervalVal):
+        logging.debug('start burst mode thread')
+       # steps = int(self.captureInfo.getStepsValues())
+       # interval = int(self.captureInfo.getIntervalValues())
+        steps = int(stepsVal)
+        interval = int(intervalVal)
+        
+        ts = datetime.datetime.now()
+        foldername = "{}".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
+        outputPath = "Media/Images/TimeInterval"
+        p = os.path.sep.join((outputPath, foldername))
+        os.makedirs(p)
+        
+        timeLimit = datetime.timedelta(minutes=interval)
+     #   print("timeLimit", timeLimit)
+        stepsLimit = datetime.timedelta(seconds= steps)
+      #  print("stepsLimit", stepsLimit)
+        startTimeInt = datetime.datetime.now()
+        startTimeSteps = None
+        
+        while((datetime.datetime.now()-startTimeInt) < timeLimit):
+           startTimeSteps = datetime.datetime.now()
+          # print("now", datetime.datetime.now(), " startTimeInt:",startTimeInt)
+          # print("difference:", (datetime.datetime.now()-startTimeInt))
+           logging.debug("outer")
+           logging.debug(datetime.datetime.now()-startTimeSteps)
+           # stop if the time limit is reached :
+           while True:
+               if((datetime.datetime.now()-startTimeSteps) > stepsLimit):
+#                    print("now2", datetime.datetime.now(), " startTimeSteps:",startTimeSteps)
+#                    print("difference2", (datetime.datetime.now()-startTimeSteps))
+                   logging.debug("inner")
+                   logging.debug(datetime.datetime.now()-startTimeSteps)
+                   self.takeSnapshot(p)
+                   break
+        logging.debug('done')
+        return
+        
+    def takeSnapshot(self,outputPath):
             # grab the current timestamp and use it to construct the
             # output path
             if(self.processedImage is None):
                 return
             ts = datetime.datetime.now()
-            filename = "{}.jpg".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
-            p = os.path.sep.join((self.outputPath, filename))
+            filename = "{}.jpg".format(ts.strftime("%Y-%m-%d_%H-%M-%S-%f"))
+            p = os.path.sep.join((outputPath, filename))
             image = self.processedImage.convert('RGB')
             # save the file
             image.save(p)
@@ -285,6 +378,13 @@ class Dashboard:
             self.vs.stop()
             self.root.quit()
     
-    def getMasterPanel():
-        print(type(self.master_panel))
-        return self.master_panel
+    def getsystemMode(self):
+        self.mode = self.captureInfo.getCaptureModeValues()
+        if(self.mode == int(1)):
+            return "single"
+        elif(self.mode == int(2)):
+            return "burst"
+        elif(self.mode == int(3)):
+            return "Time Lapse"
+        elif(self.mode == int(4)):
+            return "Image Stack"
