@@ -1,0 +1,572 @@
+Index: DiagnosticMode.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from tkinter import *\r\n\r\nWIDTH = 600\r\nHEIGHT = 380\r\n\r\nclass App(Tk):\r\n    def __init__(self, *args, **kwargs):\r\n        Tk.__init__(self, *args, **kwargs)\r\n        # Setup Menu\r\n        MainMenu(self)\r\n        self.geometry('{}x{}'.format(WIDTH, HEIGHT))\r\n        # Setup Frame\r\n\r\n        container = Frame(self).grid(row=0, column=1)\r\n        # container.pack(side=\"top\", fill=\"both\", expand=True)\r\n        self.grid_rowconfigure(0, weight=1)\r\n        self.grid_rowconfigure(1, weight=1)\r\n        self.grid_rowconfigure(2, weight=1)\r\n        self.grid_rowconfigure(3, weight=1)\r\n        self.grid_columnconfigure(0, weight=1)\r\n        self.grid_columnconfigure(1, weight=1)\r\n        self.grid_columnconfigure(2, weight=1)\r\n\r\n        self.frames = {}\r\n        print(self.grid_size())\r\n        for F in (StartPage, PageOne, PageTwo):\r\n            frame = F(container, self)\r\n            self.frames[F] = frame\r\n            frame.grid(row=0, column=1, rowspan=4)\r\n\r\n        self.show_frame(StartPage)\r\n\r\n    def show_frame(self, context):\r\n        frame = self.frames[context]\r\n        frame.tkraise()\r\n\r\n\r\nclass StartPage(Frame):\r\n    def __init__(self, parent, controller):\r\n        Frame.__init__(self, parent)\r\n\r\n        label = Label(self, text=\"Start Page\").grid(row=0, column=0)\r\n        #label.pack(padx=10, pady=10)\r\n        page_one = Button(self, text=\"Page One\", command=lambda: controller.show_frame(PageOne)).grid(row=1, column=0)\r\n        #page_one.pack()\r\n        page_two = Button(self, text=\"Page Two\", command=lambda: controller.show_frame(PageTwo)).grid(row=2, column=0)\r\n        #page_two.pack()\r\n\r\n\r\nclass PageOne(Frame):\r\n    def __init__(self, parent, controller):\r\n        Frame.__init__(self, parent)\r\n\r\n        label = Label(self, text=\"Page One\").grid(row=0, column=0)\r\n        #label.pack(padx=10, pady=10)\r\n        start_page = Button(self, text=\"Start Page\", command=lambda: controller.show_frame(StartPage)).grid(row=1, column=0)\r\n        #start_page.pack()\r\n        page_two = Button(self, text=\"Page Two\", command=lambda: controller.show_frame(PageTwo)).grid(row=2, column=0)\r\n        #page_two.pack()\r\n\r\n\r\nclass PageTwo(Frame):\r\n    def __init__(self, parent, controller):\r\n        Frame.__init__(self, parent)\r\n\r\n        label = Label(self, text=\"Page Two\").grid(row=0, column=0)\r\n        #label.pack(padx=10, pady=10)\r\n        start_page = Button(self, text=\"Start Page\", command=lambda: controller.show_frame(StartPage)).grid(row=1, column=0)\r\n        #start_page.pack()\r\n        page_one = Button(self, text=\"Page One\", command=lambda: controller.show_frame(PageOne)).grid(row=2, column=0)\r\n        #page_one.pack()\r\n\r\n\r\nclass MainMenu:\r\n    def __init__(self, master):\r\n        b1 = Button(master, text=\"B1\", padx=10).grid(row=0, column=0, sticky=\"w\", padx=10)\r\n        b2 = Button(master, text=\"B2\", padx=10).grid(row=1, column=0, sticky=\"w\", padx=10)\r\n        b3 = Button(master, text=\"B3\", padx=10).grid(row=2, column=0, sticky=\"w\", padx=10)\r\n        b4 = Button(master, text=\"B4\", padx=10).grid(row=3, column=0, sticky=\"w\", padx=10)\r\n        b5 = Button(master, text=\"B5\", padx=10).grid(row=0, column=2, sticky=\"e\", padx=10)\r\n        b6 = Button(master, text=\"B6\", padx=10).grid(row=1, column=2, sticky=\"e\", padx=10)\r\n        b7 = Button(master, text=\"B7\", padx=10).grid(row=2, column=2, sticky=\"e\", padx=10)\r\n        b8 = Button(master, text=\"B8\", padx=10).grid(row=3, column=2, sticky=\"e\", padx=10)\r\n\r\n\r\napp = App()\r\napp.mainloop()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- DiagnosticMode.py	(revision f79575c48885fa4f33a0525dc25700113912d14d)
++++ DiagnosticMode.py	(date 1589584364997)
+@@ -9,20 +9,22 @@
+         # Setup Menu
+         MainMenu(self)
+         self.geometry('{}x{}'.format(WIDTH, HEIGHT))
++        grid_size = self.grid_size()
++        print(grid_size)
++        #Set up rows and columns
++        for i in range(grid_size[0]):
++            self.grid_columnconfigure(i, weight=1)
++        for i in range(grid_size[1]):
++            self.grid_rowconfigure(i, weight=1)
++
++
+         # Setup Frame
+ 
+-        container = Frame(self).grid(row=0, column=1)
+-        # container.pack(side="top", fill="both", expand=True)
+-        self.grid_rowconfigure(0, weight=1)
+-        self.grid_rowconfigure(1, weight=1)
+-        self.grid_rowconfigure(2, weight=1)
+-        self.grid_rowconfigure(3, weight=1)
+-        self.grid_columnconfigure(0, weight=1)
+-        self.grid_columnconfigure(1, weight=1)
+-        self.grid_columnconfigure(2, weight=1)
++        container = Frame(self).grid(row=0, column=1, rowspan=4)
++        #, width=300, height=280, background="black"
+ 
+         self.frames = {}
+-        print(self.grid_size())
++
+         for F in (StartPage, PageOne, PageTwo):
+             frame = F(container, self)
+             self.frames[F] = frame
+@@ -39,48 +41,49 @@
+     def __init__(self, parent, controller):
+         Frame.__init__(self, parent)
+ 
+-        label = Label(self, text="Start Page").grid(row=0, column=0)
+-        #label.pack(padx=10, pady=10)
+-        page_one = Button(self, text="Page One", command=lambda: controller.show_frame(PageOne)).grid(row=1, column=0)
+-        #page_one.pack()
+-        page_two = Button(self, text="Page Two", command=lambda: controller.show_frame(PageTwo)).grid(row=2, column=0)
+-        #page_two.pack()
++        label = Label(self, text="Start Page").grid(row=0)
++        page_one = Button(self, text="Page One",
++                          command=lambda: controller.frames[StartPage].grid_remove()).grid(row=1)
++        page_two = Button(self, text="Page Two",
++                          command=lambda: controller.show_frame(PageTwo)).grid(row=2)
+ 
+ 
+ class PageOne(Frame):
+     def __init__(self, parent, controller):
+         Frame.__init__(self, parent)
+ 
+-        label = Label(self, text="Page One").grid(row=0, column=0)
+-        #label.pack(padx=10, pady=10)
+-        start_page = Button(self, text="Start Page", command=lambda: controller.show_frame(StartPage)).grid(row=1, column=0)
+-        #start_page.pack()
+-        page_two = Button(self, text="Page Two", command=lambda: controller.show_frame(PageTwo)).grid(row=2, column=0)
+-        #page_two.pack()
++        label = Label(self, text="Page One").grid(row=0)
++        start_page = Button(self, text="Start Page",
++                            command=lambda: controller.show_frame(StartPage)).grid(row=1)
++        page_two = Button(self, text="Page Two",
++                          command=lambda: controller.show_frame(PageTwo)).grid(row=2)
+ 
+ 
+ class PageTwo(Frame):
+     def __init__(self, parent, controller):
+         Frame.__init__(self, parent)
+ 
+-        label = Label(self, text="Page Two").grid(row=0, column=0)
+-        #label.pack(padx=10, pady=10)
+-        start_page = Button(self, text="Start Page", command=lambda: controller.show_frame(StartPage)).grid(row=1, column=0)
+-        #start_page.pack()
+-        page_one = Button(self, text="Page One", command=lambda: controller.show_frame(PageOne)).grid(row=2, column=0)
+-        #page_one.pack()
++        label = Label(self, text="Page Two").grid(row=0)
++        start_page = Button(self, text="Start Page",
++                            command=lambda: controller.show_frame(StartPage)).grid(row=1)
++        page_one = Button(self, text="Page One",
++                          command=lambda: controller.show_frame(PageOne)).grid(row=2)
+ 
+ 
+ class MainMenu:
+     def __init__(self, master):
+-        b1 = Button(master, text="B1", padx=10).grid(row=0, column=0, sticky="w", padx=10)
+-        b2 = Button(master, text="B2", padx=10).grid(row=1, column=0, sticky="w", padx=10)
+-        b3 = Button(master, text="B3", padx=10).grid(row=2, column=0, sticky="w", padx=10)
+-        b4 = Button(master, text="B4", padx=10).grid(row=3, column=0, sticky="w", padx=10)
+-        b5 = Button(master, text="B5", padx=10).grid(row=0, column=2, sticky="e", padx=10)
+-        b6 = Button(master, text="B6", padx=10).grid(row=1, column=2, sticky="e", padx=10)
+-        b7 = Button(master, text="B7", padx=10).grid(row=2, column=2, sticky="e", padx=10)
+-        b8 = Button(master, text="B8", padx=10).grid(row=3, column=2, sticky="e", padx=10)
++        l_buttons = Frame(master, height=380, background="black").grid(row=0, column=0, rowspan=4, sticky="nsew")
++        b1 = Button(l_buttons, text="B1", padx=10).grid(row=0, column=0, sticky="w", padx=10)
++        b2 = Button(l_buttons, text="B2", padx=10).grid(row=1, column=0, sticky="w", padx=10)
++        b3 = Button(l_buttons, text="B3", padx=10).grid(row=2, column=0, sticky="w", padx=10)
++        b4 = Button(l_buttons, text="B4", padx=10).grid(row=3, column=0, sticky="w", padx=10)
++        r_buttons = Frame(master, height=380, background="blue").grid(row=0, column=2, rowspan=4, sticky="nsew")
++        b5 = Button(r_buttons, text="B5", padx=10).grid(row=0, column=2, sticky="e", padx=10)
++        b6 = Button(r_buttons, text="B6", padx=10).grid(row=1, column=2, sticky="e", padx=10)
++        b7 = Button(r_buttons, text="B7", padx=10).grid(row=2, column=2, sticky="e", padx=10)
++        b8 = Button(r_buttons, text="B8", padx=10).grid(row=3, column=2, sticky="e", padx=10)
++
++
+ 
+ 
+ app = App()
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"JavaScriptSettings\">\r\n    <option name=\"languageLevel\" value=\"ES6\" />\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.6 (MosisUI)\" project-jdk-type=\"Python SDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision f79575c48885fa4f33a0525dc25700113912d14d)
++++ .idea/misc.xml	(date 1589499222289)
+@@ -3,5 +3,8 @@
+   <component name="JavaScriptSettings">
+     <option name="languageLevel" value="ES6" />
+   </component>
+-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6 (MosisUI)" project-jdk-type="Python SDK" />
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8" project-jdk-type="Python SDK" />
++  <component name="PythonCompatibilityInspectionAdvertiser">
++    <option name="version" value="3" />
++  </component>
+ </project>
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"bddee282-93ce-4baf-a03d-b06d008b4048\" name=\"Default Changelist\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/MainMenuUI.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/MainMenuUI.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/SensorModeUI.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/SensorModeUI.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"EXCLUDED_CONVERTED_TO_IGNORED\" value=\"true\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileEditorManager\">\r\n    <leaf>\r\n      <file pinned=\"false\" current-in-tab=\"true\">\r\n        <entry file=\"file://$PROJECT_DIR$/MainMenuUI.py\">\r\n          <provider selected=\"true\" editor-type-id=\"text-editor\">\r\n            <state relative-caret-position=\"256\">\r\n              <caret line=\"40\" lean-forward=\"true\" selection-start-line=\"40\" selection-end-line=\"40\" />\r\n              <folding>\r\n                <element signature=\"e#0#20#0\" expanded=\"true\" />\r\n              </folding>\r\n            </state>\r\n          </provider>\r\n        </entry>\r\n      </file>\r\n      <file pinned=\"false\" current-in-tab=\"false\">\r\n        <entry file=\"file://$PROJECT_DIR$/SensorModeUI.py\">\r\n          <provider selected=\"true\" editor-type-id=\"text-editor\">\r\n            <state relative-caret-position=\"165\">\r\n              <caret line=\"11\" column=\"17\" lean-forward=\"true\" selection-start-line=\"11\" selection-start-column=\"17\" selection-end-line=\"11\" selection-end-column=\"17\" />\r\n            </state>\r\n          </provider>\r\n        </entry>\r\n      </file>\r\n      <file pinned=\"false\" current-in-tab=\"false\">\r\n        <entry file=\"file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/tkinter/__init__.py\">\r\n          <provider selected=\"true\" editor-type-id=\"text-editor\">\r\n            <state relative-caret-position=\"130\">\r\n              <caret line=\"1472\" selection-start-line=\"1472\" selection-end-line=\"1472\" />\r\n            </state>\r\n          </provider>\r\n        </entry>\r\n      </file>\r\n    </leaf>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\r\n      <list>\r\n        <option value=\"Fernando R. Guzman Casas &lt;fernando.guzman2@upr.edu&gt;\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"IdeDocumentHistory\">\r\n    <option name=\"CHANGED_PATHS\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/test.py\" />\r\n        <option value=\"$PROJECT_DIR$/SensorModeUI.py\" />\r\n        <option value=\"$PROJECT_DIR$/MainMenuUI.py\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectFrameBounds\" extendedState=\"6\">\r\n    <option name=\"y\" value=\"23\" />\r\n    <option name=\"width\" value=\"1366\" />\r\n    <option name=\"height\" value=\"745\" />\r\n  </component>\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectView\">\r\n    <navigator proportions=\"\" version=\"1\">\r\n      <foldersAlwaysOnTop value=\"true\" />\r\n    </navigator>\r\n    <panes>\r\n      <pane id=\"Scope\" />\r\n      <pane id=\"ProjectPane\">\r\n        <subPane>\r\n          <expand>\r\n            <path>\r\n              <item name=\"MosisUI\" type=\"b2602c69:ProjectViewProjectNode\" />\r\n              <item name=\"MosisUI\" type=\"462c0819:PsiDirectoryNode\" />\r\n            </path>\r\n          </expand>\r\n          <select />\r\n        </subPane>\r\n      </pane>\r\n    </panes>\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"SHARE_PROJECT_CONFIGURATION_FILES\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"nodejs_interpreter_path.stuck_in_default_project\" value=\"undefined stuck path\" />\r\n    <property name=\"nodejs_npm_path_reset_for_default_project\" value=\"true\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable\" />\r\n  </component>\r\n  <component name=\"RunDashboard\">\r\n    <option name=\"ruleStates\">\r\n      <list>\r\n        <RuleState>\r\n          <option name=\"name\" value=\"ConfigurationTypeDashboardGroupingRule\" />\r\n        </RuleState>\r\n        <RuleState>\r\n          <option name=\"name\" value=\"StatusDashboardGroupingRule\" />\r\n        </RuleState>\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Python.test\">\r\n    <configuration name=\"SensorModeUI\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\">\r\n      <module name=\"MosisUI\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/SensorModeUI.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Unnamed\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"MosisUI\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"$PROJECT_DIR$/venv/bin/python\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"test\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\">\r\n      <module name=\"MosisUI\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/MainMenuUI.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <list>\r\n      <item itemvalue=\"Python.Unnamed\" />\r\n      <item itemvalue=\"Python.test\" />\r\n      <item itemvalue=\"Python.SensorModeUI\" />\r\n    </list>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.test\" />\r\n        <item itemvalue=\"Python.SensorModeUI\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration />\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"bddee282-93ce-4baf-a03d-b06d008b4048\" name=\"Default Changelist\" comment=\"\" />\r\n      <created>1589345481457</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1589345481457</updated>\r\n      <workItem from=\"1589345483566\" duration=\"10547000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"sensor mode ui\">\r\n      <created>1589411275899</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1589411275899</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TimeTrackingManager\">\r\n    <option name=\"totallyTimeSpent\" value=\"10547000\" />\r\n  </component>\r\n  <component name=\"ToolWindowManager\">\r\n    <frame x=\"0\" y=\"155\" width=\"1366\" height=\"745\" extended-state=\"6\" />\r\n    <editor active=\"true\" />\r\n    <layout>\r\n      <window_info id=\"Favorites\" side_tool=\"true\" />\r\n      <window_info content_ui=\"combo\" id=\"Project\" order=\"0\" weight=\"0.18564743\" />\r\n      <window_info id=\"Structure\" order=\"1\" side_tool=\"true\" weight=\"0.25\" />\r\n      <window_info anchor=\"bottom\" id=\"Docker\" show_stripe_button=\"false\" />\r\n      <window_info anchor=\"bottom\" id=\"Database Changes\" />\r\n      <window_info anchor=\"bottom\" id=\"Version Control\" />\r\n      <window_info anchor=\"bottom\" id=\"Python Console\" />\r\n      <window_info anchor=\"bottom\" id=\"Terminal\" weight=\"0.32924962\" />\r\n      <window_info anchor=\"bottom\" id=\"Event Log\" side_tool=\"true\" />\r\n      <window_info anchor=\"bottom\" id=\"Message\" order=\"0\" />\r\n      <window_info anchor=\"bottom\" id=\"Find\" order=\"1\" />\r\n      <window_info active=\"true\" anchor=\"bottom\" id=\"Run\" order=\"2\" visible=\"true\" weight=\"0.32924962\" />\r\n      <window_info anchor=\"bottom\" id=\"Debug\" order=\"3\" weight=\"0.39969373\" />\r\n      <window_info anchor=\"bottom\" id=\"Cvs\" order=\"4\" weight=\"0.25\" />\r\n      <window_info anchor=\"bottom\" id=\"Inspection\" order=\"5\" weight=\"0.4\" />\r\n      <window_info anchor=\"bottom\" id=\"TODO\" order=\"6\" />\r\n      <window_info anchor=\"right\" id=\"SciView\" />\r\n      <window_info anchor=\"right\" id=\"Database\" />\r\n      <window_info anchor=\"right\" id=\"Commander\" internal_type=\"SLIDING\" order=\"0\" type=\"SLIDING\" weight=\"0.4\" />\r\n      <window_info anchor=\"right\" id=\"Ant Build\" order=\"1\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" content_ui=\"combo\" id=\"Hierarchy\" order=\"2\" weight=\"0.25\" />\r\n    </layout>\r\n    <layout-to-restore>\r\n      <window_info id=\"Favorites\" order=\"0\" side_tool=\"true\" />\r\n      <window_info content_ui=\"combo\" id=\"Project\" order=\"1\" visible=\"true\" weight=\"0.18564743\" />\r\n      <window_info id=\"Structure\" order=\"2\" side_tool=\"true\" weight=\"0.25\" />\r\n      <window_info anchor=\"bottom\" id=\"Docker\" order=\"0\" show_stripe_button=\"false\" />\r\n      <window_info anchor=\"bottom\" id=\"Terminal\" order=\"1\" weight=\"0.32924962\" />\r\n      <window_info anchor=\"bottom\" id=\"Event Log\" order=\"2\" side_tool=\"true\" />\r\n      <window_info anchor=\"bottom\" id=\"Database Changes\" order=\"3\" />\r\n      <window_info anchor=\"bottom\" id=\"Version Control\" order=\"4\" />\r\n      <window_info anchor=\"bottom\" id=\"Python Console\" order=\"5\" />\r\n      <window_info anchor=\"bottom\" id=\"Message\" order=\"6\" />\r\n      <window_info anchor=\"bottom\" id=\"Find\" order=\"7\" />\r\n      <window_info active=\"true\" anchor=\"bottom\" id=\"Run\" order=\"8\" visible=\"true\" weight=\"0.32924962\" />\r\n      <window_info anchor=\"bottom\" id=\"Debug\" order=\"9\" weight=\"0.4\" />\r\n      <window_info anchor=\"bottom\" id=\"Cvs\" order=\"10\" weight=\"0.25\" />\r\n      <window_info anchor=\"bottom\" id=\"Inspection\" order=\"11\" weight=\"0.4\" />\r\n      <window_info anchor=\"bottom\" id=\"TODO\" order=\"12\" />\r\n      <window_info anchor=\"right\" id=\"Database\" order=\"0\" />\r\n      <window_info anchor=\"right\" id=\"SciView\" order=\"1\" />\r\n      <window_info anchor=\"right\" id=\"Commander\" internal_type=\"SLIDING\" order=\"2\" type=\"SLIDING\" weight=\"0.4\" />\r\n      <window_info anchor=\"right\" id=\"Ant Build\" order=\"3\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" content_ui=\"combo\" id=\"Hierarchy\" order=\"4\" weight=\"0.25\" />\r\n    </layout-to-restore>\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"1\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"sensor mode ui\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"sensor mode ui\" />\r\n  </component>\r\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\r\n    <SUITE FILE_PATH=\"coverage/MosisUI$test.coverage\" NAME=\"test Coverage Results\" MODIFIED=\"1589419857098\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\r\n    <SUITE FILE_PATH=\"coverage/MosisUI$Unnamed.coverage\" NAME=\"Unnamed Coverage Results\" MODIFIED=\"1589346407894\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"\" />\r\n    <SUITE FILE_PATH=\"coverage/MosisUI$SensorModeUI.coverage\" NAME=\"SensorModeUI Coverage Results\" MODIFIED=\"1589418975609\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"editorHistoryManager\">\r\n    <entry file=\"file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/tkinter/__init__.py\">\r\n      <provider selected=\"true\" editor-type-id=\"text-editor\">\r\n        <state relative-caret-position=\"130\">\r\n          <caret line=\"1472\" selection-start-line=\"1472\" selection-end-line=\"1472\" />\r\n        </state>\r\n      </provider>\r\n    </entry>\r\n    <entry file=\"file://$PROJECT_DIR$/SensorModeUI.py\">\r\n      <provider selected=\"true\" editor-type-id=\"text-editor\">\r\n        <state relative-caret-position=\"165\">\r\n          <caret line=\"11\" column=\"17\" lean-forward=\"true\" selection-start-line=\"11\" selection-start-column=\"17\" selection-end-line=\"11\" selection-end-column=\"17\" />\r\n        </state>\r\n      </provider>\r\n    </entry>\r\n    <entry file=\"file://$PROJECT_DIR$/MainMenuUI.py\">\r\n      <provider selected=\"true\" editor-type-id=\"text-editor\">\r\n        <state relative-caret-position=\"256\">\r\n          <caret line=\"40\" lean-forward=\"true\" selection-start-line=\"40\" selection-end-line=\"40\" />\r\n          <folding>\r\n            <element signature=\"e#0#20#0\" expanded=\"true\" />\r\n          </folding>\r\n        </state>\r\n      </provider>\r\n    </entry>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision f79575c48885fa4f33a0525dc25700113912d14d)
++++ .idea/workspace.xml	(date 1589767504515)
+@@ -1,50 +1,41 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="BranchesTreeState">
++    <expand>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++    </expand>
++    <select>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="BRANCH:diagnostic" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++    </select>
++  </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="bddee282-93ce-4baf-a03d-b06d008b4048" name="Default Changelist" comment="">
++    <list default="true" id="bddee282-93ce-4baf-a03d-b06d008b4048" name="Default Changelist" comment="Main frame spans the rows correctly">
++      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/MosisUI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MosisUI.iml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/MainMenuUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainMenuUI.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/SensorModeUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/SensorModeUI.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/DiagnosticMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/DiagnosticMode.py" afterDir="false" />
+     </list>
+-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+-  </component>
+-  <component name="FileEditorManager">
+-    <leaf>
+-      <file pinned="false" current-in-tab="true">
+-        <entry file="file://$PROJECT_DIR$/MainMenuUI.py">
+-          <provider selected="true" editor-type-id="text-editor">
+-            <state relative-caret-position="256">
+-              <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+-              <folding>
+-                <element signature="e#0#20#0" expanded="true" />
+-              </folding>
+-            </state>
+-          </provider>
+-        </entry>
+-      </file>
+-      <file pinned="false" current-in-tab="false">
+-        <entry file="file://$PROJECT_DIR$/SensorModeUI.py">
+-          <provider selected="true" editor-type-id="text-editor">
+-            <state relative-caret-position="165">
+-              <caret line="11" column="17" lean-forward="true" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+-            </state>
+-          </provider>
+-        </entry>
+-      </file>
+-      <file pinned="false" current-in-tab="false">
+-        <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/tkinter/__init__.py">
+-          <provider selected="true" editor-type-id="text-editor">
+-            <state relative-caret-position="130">
+-              <caret line="1472" selection-start-line="1472" selection-end-line="1472" />
+-            </state>
+-          </provider>
+-        </entry>
+-      </file>
+-    </leaf>
+   </component>
+   <component name="FileTemplateManagerImpl">
+     <option name="RECENT_TEMPLATES">
+@@ -59,62 +50,49 @@
+         <option value="Fernando R. Guzman Casas &lt;fernando.guzman2@upr.edu&gt;" />
+       </list>
+     </option>
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="master" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="IdeDocumentHistory">
+-    <option name="CHANGED_PATHS">
+-      <list>
+-        <option value="$PROJECT_DIR$/test.py" />
+-        <option value="$PROJECT_DIR$/SensorModeUI.py" />
+-        <option value="$PROJECT_DIR$/MainMenuUI.py" />
+-      </list>
+-    </option>
+-  </component>
+-  <component name="ProjectFrameBounds" extendedState="6">
+-    <option name="y" value="23" />
+-    <option name="width" value="1366" />
+-    <option name="height" value="745" />
+-  </component>
++  <component name="ProjectId" id="1bv2a4Gy1Sp8xQy8Cqi9ZYNUshH" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+-  <component name="ProjectView">
+-    <navigator proportions="" version="1">
+-      <foldersAlwaysOnTop value="true" />
+-    </navigator>
+-    <panes>
+-      <pane id="Scope" />
+-      <pane id="ProjectPane">
+-        <subPane>
+-          <expand>
+-            <path>
+-              <item name="MosisUI" type="b2602c69:ProjectViewProjectNode" />
+-              <item name="MosisUI" type="462c0819:PsiDirectoryNode" />
+-            </path>
+-          </expand>
+-          <select />
+-        </subPane>
+-      </pane>
+-    </panes>
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
+   </component>
+   <component name="PropertiesComponent">
+     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+     <property name="WebServerToolWindowFactoryState" value="false" />
++    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
++    <property name="settings.editor.selected.configurable" value="preferences.editor.code.editing" />
+   </component>
+-  <component name="RunDashboard">
+-    <option name="ruleStates">
+-      <list>
+-        <RuleState>
+-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+-        </RuleState>
+-        <RuleState>
+-          <option name="name" value="StatusDashboardGroupingRule" />
+-        </RuleState>
+-      </list>
+-    </option>
+-  </component>
+-  <component name="RunManager" selected="Python.test">
++  <component name="RunManager" selected="Python.DiagnosticMode">
++    <configuration name="DiagnosticMode" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
++      <module name="MosisUI" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <envs>
++        <env name="PYTHONUNBUFFERED" value="1" />
++      </envs>
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
++      <option name="IS_MODULE_SDK" value="true" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DiagnosticMode.py" />
++      <option name="PARAMETERS" value="" />
++      <option name="SHOW_COMMAND_LINE" value="false" />
++      <option name="EMULATE_TERMINAL" value="false" />
++      <option name="MODULE_MODE" value="false" />
++      <option name="REDIRECT_INPUT" value="false" />
++      <option name="INPUT_FILE" value="" />
++      <method v="2" />
++    </configuration>
+     <configuration name="SensorModeUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+       <module name="MosisUI" />
+       <option name="INTERPRETER_OPTIONS" value="" />
+@@ -185,9 +163,11 @@
+       <item itemvalue="Python.Unnamed" />
+       <item itemvalue="Python.test" />
+       <item itemvalue="Python.SensorModeUI" />
++      <item itemvalue="Python.DiagnosticMode" />
+     </list>
+     <recent_temporary>
+       <list>
++        <item itemvalue="Python.DiagnosticMode" />
+         <item itemvalue="Python.test" />
+         <item itemvalue="Python.SensorModeUI" />
+       </list>
+@@ -212,98 +192,107 @@
+       <option name="project" value="LOCAL" />
+       <updated>1589411275899</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="Add Diagnostic mode, partial button implementation">
++      <created>1589515832005</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1589515832005</updated>
++    </task>
++    <task id="LOCAL-00003" summary="Main frame spans the rows correctly">
++      <created>1589518550699</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1589518550699</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="TimeTrackingManager">
+     <option name="totallyTimeSpent" value="10547000" />
+-  </component>
+-  <component name="ToolWindowManager">
+-    <frame x="0" y="155" width="1366" height="745" extended-state="6" />
+-    <editor active="true" />
+-    <layout>
+-      <window_info id="Favorites" side_tool="true" />
+-      <window_info content_ui="combo" id="Project" order="0" weight="0.18564743" />
+-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+-      <window_info anchor="bottom" id="Database Changes" />
+-      <window_info anchor="bottom" id="Version Control" />
+-      <window_info anchor="bottom" id="Python Console" />
+-      <window_info anchor="bottom" id="Terminal" weight="0.32924962" />
+-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+-      <window_info anchor="bottom" id="Message" order="0" />
+-      <window_info anchor="bottom" id="Find" order="1" />
+-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32924962" />
+-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39969373" />
+-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+-      <window_info anchor="bottom" id="TODO" order="6" />
+-      <window_info anchor="right" id="SciView" />
+-      <window_info anchor="right" id="Database" />
+-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+-    </layout>
+-    <layout-to-restore>
+-      <window_info id="Favorites" order="0" side_tool="true" />
+-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.18564743" />
+-      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+-      <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
+-      <window_info anchor="bottom" id="Terminal" order="1" weight="0.32924962" />
+-      <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
+-      <window_info anchor="bottom" id="Database Changes" order="3" />
+-      <window_info anchor="bottom" id="Version Control" order="4" />
+-      <window_info anchor="bottom" id="Python Console" order="5" />
+-      <window_info anchor="bottom" id="Message" order="6" />
+-      <window_info anchor="bottom" id="Find" order="7" />
+-      <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.32924962" />
+-      <window_info anchor="bottom" id="Debug" order="9" weight="0.4" />
+-      <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
+-      <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
+-      <window_info anchor="bottom" id="TODO" order="12" />
+-      <window_info anchor="right" id="Database" order="0" />
+-      <window_info anchor="right" id="SciView" order="1" />
+-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
+-      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+-    </layout-to-restore>
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="1" />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="diagnostic" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
++    <option name="RECENT_FILTERS">
++      <map>
++        <entry key="Branch">
++          <value>
++            <list>
++              <RecentGroup>
++                <option name="FILTER_VALUES">
++                  <option value="diagnostic" />
++                </option>
++              </RecentGroup>
++              <RecentGroup>
++                <option name="FILTER_VALUES">
++                  <option value="origin/master" />
++                </option>
++              </RecentGroup>
++            </list>
++          </value>
++        </entry>
++      </map>
++    </option>
++    <option name="oldMeFiltersMigrated" value="true" />
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="sensor mode ui" />
+-    <option name="LAST_COMMIT_MESSAGE" value="sensor mode ui" />
++    <MESSAGE value="Add Diagnostic mode, partial button implementation" />
++    <MESSAGE value="Main frame spans the rows correctly" />
++    <option name="LAST_COMMIT_MESSAGE" value="Main frame spans the rows correctly" />
+   </component>
+-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+-    <SUITE FILE_PATH="coverage/MosisUI$test.coverage" NAME="test Coverage Results" MODIFIED="1589419857098" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+-    <SUITE FILE_PATH="coverage/MosisUI$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1589346407894" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+-    <SUITE FILE_PATH="coverage/MosisUI$SensorModeUI.coverage" NAME="SensorModeUI Coverage Results" MODIFIED="1589418975609" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+-  </component>
+-  <component name="editorHistoryManager">
+-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/tkinter/__init__.py">
+-      <provider selected="true" editor-type-id="text-editor">
+-        <state relative-caret-position="130">
+-          <caret line="1472" selection-start-line="1472" selection-end-line="1472" />
+-        </state>
+-      </provider>
+-    </entry>
+-    <entry file="file://$PROJECT_DIR$/SensorModeUI.py">
+-      <provider selected="true" editor-type-id="text-editor">
+-        <state relative-caret-position="165">
+-          <caret line="11" column="17" lean-forward="true" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+-        </state>
+-      </provider>
+-    </entry>
+-    <entry file="file://$PROJECT_DIR$/MainMenuUI.py">
+-      <provider selected="true" editor-type-id="text-editor">
+-        <state relative-caret-position="256">
+-          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+-          <folding>
+-            <element signature="e#0#20#0" expanded="true" />
+-          </folding>
+-        </state>
+-      </provider>
+-    </entry>
++  <component name="WindowStateProjectService">
++    <state x="586" y="198" key="#Inspections" timestamp="1589499097466">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1589499097466" />
++    <state width="1899" height="117" key="GridCell.Tab.0.bottom" timestamp="1589584374997">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state width="1899" height="117" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589584374997" />
++    <state width="1899" height="117" key="GridCell.Tab.0.center" timestamp="1589584374997">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state width="1899" height="117" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589584374997" />
++    <state width="1899" height="117" key="GridCell.Tab.0.left" timestamp="1589584374997">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state width="1899" height="117" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589584374997" />
++    <state width="1899" height="117" key="GridCell.Tab.0.right" timestamp="1589584374997">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state width="1899" height="117" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589584374997" />
++    <state x="147" y="170" key="SettingsEditor" timestamp="1589501194862">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state x="147" y="170" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1589501194862" />
++    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1589518607498">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589518607498" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/MosisUI.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <excludeFolder url=\"file://$MODULE_DIR$/venv\" />\r\n    </content>\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n  <component name=\"TestRunnerService\">\r\n    <option name=\"PROJECT_TEST_RUNNER\" value=\"Unittests\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/MosisUI.iml	(revision f79575c48885fa4f33a0525dc25700113912d14d)
++++ .idea/MosisUI.iml	(date 1589412257683)
+@@ -4,10 +4,7 @@
+     <content url="file://$MODULE_DIR$">
+       <excludeFolder url="file://$MODULE_DIR$/venv" />
+     </content>
+-    <orderEntry type="inheritedJdk" />
++    <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+-  <component name="TestRunnerService">
+-    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+-  </component>
+ </module>
+\ No newline at end of file
+Index: .idea/inspectionProfiles/Project_Default.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/inspectionProfiles/Project_Default.xml	(date 1589499221986)
++++ .idea/inspectionProfiles/Project_Default.xml	(date 1589499221986)
+@@ -0,0 +1,15 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="PyCompatibilityInspection" enabled="true" level="WARNING" enabled_by_default="true">
++      <option name="ourVersions">
++        <value>
++          <list size="2">
++            <item index="0" class="java.lang.String" itemvalue="2.7" />
++            <item index="1" class="java.lang.String" itemvalue="3.9" />
++          </list>
++        </value>
++      </option>
++    </inspection_tool>
++  </profile>
++</component>
+\ No newline at end of file
