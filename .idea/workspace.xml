@@ -25,11 +25,10 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bddee282-93ce-4baf-a03d-b06d008b4048" name="Default Changelist" comment="Main frame spans the rows correctly">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/MosisUI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MosisUI.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bddee282-93ce-4baf-a03d-b06d008b4048" name="Default Changelist" comment="Create a basic button layout">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Buttons.py" beforeDir="false" afterPath="$PROJECT_DIR$/Buttons.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589518550699</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Create a basic button layout">
+      <created>1589773167478</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1589773167478</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -313,29 +319,46 @@
     <MESSAGE value="sensor mode ui" />
     <MESSAGE value="Add Diagnostic mode, partial button implementation" />
     <MESSAGE value="Main frame spans the rows correctly" />
-    <option name="LAST_COMMIT_MESSAGE" value="Main frame spans the rows correctly" />
+    <MESSAGE value="Create a basic button layout" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create a basic button layout" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1589769119199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1589769119199" />
-    <state width="1899" height="317" key="GridCell.Tab.0.bottom" timestamp="1589773059515">
+    <state width="1899" height="72" key="GridCell.Tab.0.bottom" timestamp="1589778554282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="317" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589773059515" />
-    <state width="1899" height="317" key="GridCell.Tab.0.center" timestamp="1589773059515">
+    <state width="1899" height="72" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554282" />
+    <state width="1899" height="72" key="GridCell.Tab.0.center" timestamp="1589778554282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="317" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589773059515" />
-    <state width="1899" height="317" key="GridCell.Tab.0.left" timestamp="1589773059515">
+    <state width="1899" height="72" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554282" />
+    <state width="1899" height="72" key="GridCell.Tab.0.left" timestamp="1589778554281">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="317" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589773059515" />
-    <state width="1899" height="317" key="GridCell.Tab.0.right" timestamp="1589773059515">
+    <state width="1899" height="72" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554281" />
+    <state width="1899" height="72" key="GridCell.Tab.0.right" timestamp="1589778554282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="317" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589773059515" />
+    <state width="1899" height="72" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554282" />
+    <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1589775635810">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="347" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
+    <state width="1899" height="347" key="GridCell.Tab.1.center" timestamp="1589775635810">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="347" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
+    <state width="1899" height="347" key="GridCell.Tab.1.left" timestamp="1589775635810">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="347" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
+    <state width="1899" height="347" key="GridCell.Tab.1.right" timestamp="1589775635810">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="347" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
     <state x="147" y="170" key="SettingsEditor" timestamp="1589501194862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -4,6 +4,8 @@ from MainMenuUI import MainMenuUI
 from SensorModeUI import SensorModeUI
 from Gallery import Gallery
 from Dashboard import Dashboard
+from Buttons import Col1Buttons
+from Buttons import Col2Buttons
 from imutils.video import VideoStream
 import time
 
@@ -33,6 +35,16 @@ class gallery(Page):
        Page.__init__(self, *args, **kwargs)
        Gallery(self)
 
+class col1Buttons(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        Col1Buttons(self)
+
+class col2Buttons(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        Col2Buttons(self)
+
 class dashboard:
     def __init__(self, root):
     #   Page.__init__(self, *args, **kwargs)
@@ -53,19 +65,24 @@ class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
        # tk.Frame.__init__(self,*args, **kwargs)
         root = tk.Tk()
-        root.geometry("%dx%d+0+0" % (680, 600))
+        root.geometry("%dx%d+0+0" % (780, 600))
         gallery_panel = gallery(root)
         captureMode_panel = captureMode(root)
         mainMenu_panel = mainMenu(root)
         sensorMode_panel = sensorMode(root)
-    
-         # initialize the root window and image panel
+
+        #Control button set up
+        col_1_buttons = col1Buttons(root)
+        col_2_buttons = col2Buttons(root)
+
+        col_1_buttons.pack(side="left",fill="y")
+        col_2_buttons.pack(side="right", fill="y")
+
+        # initialize the root window and image panel
         #self.root = root
-       # self.root.geometry("%dx%d+0+0" % (680, 600))
-        
+        # self.root.geometry("%dx%d+0+0" % (680, 600))
         master_panel = tk.Frame(root, bg='#46637B',height=600, width=800)
         master_panel.pack(anchor="w", fill="both", expand=False, side="left")
-        
         #----------------- Firstmost panel -------------------------------
         ocusis_label = tk.Label(master_panel, text= "OCUSIS", bg='#46637B', fg='white', font=("Courier", 24))
         ocusis_label.pack(fill="both", padx=20, pady=20)
@@ -104,7 +121,6 @@ class MainView(tk.Frame):
         diagnostics_btn = tk.Button(panel3, text= "Diagnostics", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 14))
         diagnostics_btn.pack(side="left",fill="both", padx=100, pady=10)
  #---------------------------------------------------------------------------------------------------------
-        
         d = dashboard(root)
         print(type(d))
         dashboard_panel = d.returnPage()
