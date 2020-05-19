@@ -3,7 +3,18 @@ from tkinter import *
 
 
 class Col1Buttons:
-    objeto = None
+    panel_list = None
+    menu_state = None
+    menu_index = 0
+    col2_buttons = None
+
+    def set_col2_buttons(self, col2):
+        self.col2_buttons = col2
+
+    def set_panel_list(self, panels):
+        self.panel_list = panels
+
+
     def __init__(self, root):
 
         # self.root.geometry("%dx%d+0+0" % (680, 600))
@@ -23,13 +34,23 @@ class Col1Buttons:
 
         def up_com():
             print("UP")
-            self.objeto.lift()
+
         def down_com():
-            print("DOWN")
+            self.menu_state = not self.menu_state
+            print("Menu_state " + str(self.menu_state))
+
         def left_com():
-            print("LEFT")
+            if self.col2_buttons.get_menu_state() and self.menu_index != 0:
+                self.menu_index -= 1
+                self.panel_list[self.menu_index].lift()
+
+            print("LEFT Menu_index: " + str(self.menu_index))
+
         def right_com():
-            print("RIGHT")
+            if self.col2_buttons.get_menu_state() and self.menu_index != len(self.panel_list) - 1:
+                self.menu_index += 1
+                self.panel_list[self.menu_index].lift()
+            print("RIGHT Menu_index: " + str(self.menu_index))
 
         b1 = Button(col1_frame, text="UP", width=b_width, height= b_height, bg='#46637B', fg='white',
                     font=("Courier", 10), command=up_com)
@@ -47,17 +68,22 @@ class Col1Buttons:
                     font=("Courier", 10), command=right_com)
         b4.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
-    def set_obj(self, obj):
-        self.objeto = obj
+
 
 
 
 
 
 class Col2Buttons:
-    objeto = None
-    def set_obj(self, obj):
-        self.objeto = obj
+    col1_buttons = None
+    menu_state = False
+
+    def set_col1_buttons(self, col1):
+        self.col1_buttons = col1
+
+    def get_menu_state(self):
+        return self.menu_state
+
     def __init__(self, root):
         self.root = root
         b_width = 5
@@ -74,8 +100,8 @@ class Col2Buttons:
         def no_com():
             print("NO")
         def menu_com():
-            print("MENU")
-            self.objeto.lift()
+            self.menu_state = not self.menu_state
+            print("Menu_state " + str(self.menu_state))
         def idk_com():
             print("IDK")
 

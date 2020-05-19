@@ -150,8 +150,12 @@ class MainView(tk.Frame):
 
         master_panel.lift()
 
-        buttons_1.set_obj(dashboard_panel)
-        buttons_2.set_obj(gallery_panel)
+        panel_list = [master_panel, captureMode_panel, sensorMode_panel, gallery_panel, dashboard_panel]
+
+        buttons_1.set_panel_list(panel_list)
+
+        buttons_1.set_col2_buttons(buttons_2)
+        buttons_2.set_col1_buttons(buttons_1)
 
         root.mainloop()
 
