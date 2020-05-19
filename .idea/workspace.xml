@@ -25,10 +25,9 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bddee282-93ce-4baf-a03d-b06d008b4048" name="Default Changelist" comment="Began implementing button functions">
+    <list default="true" id="bddee282-93ce-4baf-a03d-b06d008b4048" name="Default Changelist" comment="Menu button functionality implemented">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Buttons.py" beforeDir="false" afterPath="$PROJECT_DIR$/Buttons.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,7 +270,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589917792835</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Menu button functionality implemented">
+      <created>1589922147569</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1589922147569</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -336,29 +342,30 @@
     <MESSAGE value="Create a basic button layout" />
     <MESSAGE value="Add buttons to main window, expand UI to fit buttons" />
     <MESSAGE value="Began implementing button functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Began implementing button functions" />
+    <MESSAGE value="Menu button functionality implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="Menu button functionality implemented" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1589769119199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1589769119199" />
-    <state width="1899" height="184" key="GridCell.Tab.0.bottom" timestamp="1589921665045">
+    <state width="1899" height="184" key="GridCell.Tab.0.bottom" timestamp="1589925268100">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="184" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589921665045" />
-    <state width="1899" height="184" key="GridCell.Tab.0.center" timestamp="1589921665045">
+    <state width="1899" height="184" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589925268100" />
+    <state width="1899" height="184" key="GridCell.Tab.0.center" timestamp="1589925268100">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="184" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589921665045" />
-    <state width="1899" height="184" key="GridCell.Tab.0.left" timestamp="1589921665045">
+    <state width="1899" height="184" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589925268100" />
+    <state width="1899" height="184" key="GridCell.Tab.0.left" timestamp="1589925268100">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="184" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589921665045" />
-    <state width="1899" height="184" key="GridCell.Tab.0.right" timestamp="1589921665045">
+    <state width="1899" height="184" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589925268100" />
+    <state width="1899" height="184" key="GridCell.Tab.0.right" timestamp="1589925268100">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="184" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589921665045" />
+    <state width="1899" height="184" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589925268100" />
     <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1589915697655">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -379,10 +386,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="147" y="170" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1589501194862" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1589778788866">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1589922172582">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589778788866" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589922172582" />
     <state x="740" y="233" key="git4idea.branch.GitSmartOperationDialog" timestamp="1589767580373">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

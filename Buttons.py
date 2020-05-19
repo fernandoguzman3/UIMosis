@@ -101,6 +101,10 @@ class Col2Buttons:
             print("NO")
         def menu_com():
             self.menu_state = not self.menu_state
+            if self.menu_state:
+                b7.configure(bg="white", fg='#46637B')
+            else:
+                b7.configure(bg='#46637B', fg="white")
             print("Menu_state " + str(self.menu_state))
         def idk_com():
             print("IDK")
