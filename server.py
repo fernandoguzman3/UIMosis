@@ -50,25 +50,39 @@ def UPDATE():
     return reply
 
 def GET(dataMessage):
-    request = dataMessage[1]
+    request = dataMessage[1].split(' ')
     global temp
     global pH
     global lumin
     global press
     global leak
+    reply = ""
 
-    if request == 'TEMPERATURE':
-        reply = str(temp)
-    elif request == 'PH':
-        reply = "," + str(pH)
-    elif request == 'LUMINOSITY':
-        reply = ",," + str(lumin)
-    elif request == 'PRESSURE':
-        reply = ",,," + str(press)
-    elif request == 'LEAK':
-        reply = ",,,," + str(leak)
+    if 'TEMPERATURE' in request:
+        reply = reply + str(temp)
     else:
-        reply = "Unknown parameter"
+        reply = reply + " - "
+    
+    if 'PH' in request:
+        reply = reply + "," + str(pH)
+    else:
+        reply = reply + ", - "
+    
+    if 'LUMINOSITY' in request:
+        reply = reply + "," + str(lumin)
+    else:
+        reply = reply + ", - "
+    
+    if 'PRESSURE' in request:
+        reply = reply + "," + str(press)
+    else:
+        reply = reply + ", - "
+    
+    if 'LEAK' in request:
+        reply = reply + "," + str(leak)
+    else:
+        reply = reply + ", - "
+    
 
     return reply
 
