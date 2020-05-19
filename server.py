@@ -8,6 +8,7 @@ temp = 30 # Unit: Celsius
 pH = 7.6  
 lumin = 0.1 # Unit: Lux
 press =  4  # Unit: atm
+leak = False
 
 def setupServer():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,25 +35,42 @@ def STATUS():
     reply = status
     return reply
 
+def UPDATE():
+    global temp
+    global pH
+    global lumin
+    global press
+    global leak
+
+    reply = str(temp) + ", "
+    reply = reply + str(pH) + ", "
+    reply = reply + str(lumin) + ", "
+    reply = reply + str(press) + ", "
+    reply = reply + str(leak)
+    return reply
+
 def GET(dataMessage):
     request = dataMessage[1]
     global temp
     global pH
     global lumin
     global press
+    global leak
 
     if request == 'TEMPERATURE':
-        reply = temp
+        reply = str(temp)
     elif request == 'PH':
-        reply = pH
+        reply = "," + str(pH)
     elif request == 'LUMINOSITY':
-        reply = lumin
+        reply = ",," + str(lumin)
     elif request == 'PRESSURE':
-        reply = press
+        reply = ",,," + str(press)
+    elif request == 'LEAK':
+        reply = ",,,," + str(leak)
     else:
         reply = "Unknown parameter"
 
-    return str(reply)
+    return reply
 
 def dataTransfer(conn):
     # Send/Recieve
@@ -65,6 +83,8 @@ def dataTransfer(conn):
         command = dataMessage[0] # command is the first segment
         if command == 'STATUS':
             reply = STATUS()
+        elif command == 'UPDATE':
+            reply = UPDATE()
         elif command == 'GET':
             reply = GET(dataMessage)
         elif command == 'EXIT':
