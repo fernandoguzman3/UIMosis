@@ -35,15 +35,17 @@ class gallery(Page):
        Page.__init__(self, *args, **kwargs)
        Gallery(self)
 
-class col1Buttons(Page):
-    def __init__(self, *args, **kwargs):
-        Page.__init__(self, *args, **kwargs)
-        Col1Buttons(self)
+# class col1Buttons(Page):
+#     def __init__(self, *args, **kwargs):
+#         Page.__init__(self, *args, **kwargs)
+#         Col1Buttons(self)
+#     def set_obj(self, obj):
+#         Col1Buttons.set_obj(Col1Buttons, obj)
 
-class col2Buttons(Page):
-    def __init__(self, *args, **kwargs):
-        Page.__init__(self, *args, **kwargs)
-        Col2Buttons(self)
+# class col2Buttons(Page):
+#     def __init__(self, *args, **kwargs):
+#         Page.__init__(self, *args, **kwargs)
+#         Col2Buttons(self)
 
 class dashboard:
     def __init__(self, root):
@@ -72,11 +74,8 @@ class MainView(tk.Frame):
         sensorMode_panel = sensorMode(root)
 
         #Control button set up
-        col_1_buttons = col1Buttons(root)
-        col_2_buttons = col2Buttons(root)
-
-        col_1_buttons.pack(side="left",fill="y")
-        col_2_buttons.pack(side="right", fill="y")
+        buttons_1 = Col1Buttons(root)
+        buttons_2 = Col2Buttons(root)
 
         # initialize the root window and image panel
         #self.root = root
@@ -150,6 +149,10 @@ class MainView(tk.Frame):
         b5.pack(side="left")
 
         master_panel.lift()
+
+        buttons_1.set_obj(dashboard_panel)
+        buttons_2.set_obj(gallery_panel)
+
         root.mainloop()
 
 if __name__ == "__main__":

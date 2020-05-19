@@ -257,7 +257,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589773167478</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add buttons to main window, expand UI to fit buttons">
+      <created>1589778761922</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1589778761922</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -320,53 +327,54 @@
     <MESSAGE value="Add Diagnostic mode, partial button implementation" />
     <MESSAGE value="Main frame spans the rows correctly" />
     <MESSAGE value="Create a basic button layout" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create a basic button layout" />
+    <MESSAGE value="Add buttons to main window, expand UI to fit buttons" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add buttons to main window, expand UI to fit buttons" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1589769119199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1589769119199" />
-    <state width="1899" height="72" key="GridCell.Tab.0.bottom" timestamp="1589778554282">
+    <state width="1899" height="184" key="GridCell.Tab.0.bottom" timestamp="1589917607896">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="72" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554282" />
-    <state width="1899" height="72" key="GridCell.Tab.0.center" timestamp="1589778554282">
+    <state width="1899" height="184" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589917607896" />
+    <state width="1899" height="184" key="GridCell.Tab.0.center" timestamp="1589917607896">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="72" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554282" />
-    <state width="1899" height="72" key="GridCell.Tab.0.left" timestamp="1589778554281">
+    <state width="1899" height="184" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589917607896" />
+    <state width="1899" height="184" key="GridCell.Tab.0.left" timestamp="1589917607896">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="72" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554281" />
-    <state width="1899" height="72" key="GridCell.Tab.0.right" timestamp="1589778554282">
+    <state width="1899" height="184" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589917607896" />
+    <state width="1899" height="184" key="GridCell.Tab.0.right" timestamp="1589917607896">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="72" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589778554282" />
-    <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1589775635810">
+    <state width="1899" height="184" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589917607896" />
+    <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1589915697655">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="347" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
-    <state width="1899" height="347" key="GridCell.Tab.1.center" timestamp="1589775635810">
+    <state width="1899" height="347" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589915697655" />
+    <state width="1899" height="347" key="GridCell.Tab.1.center" timestamp="1589915697655">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="347" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
-    <state width="1899" height="347" key="GridCell.Tab.1.left" timestamp="1589775635810">
+    <state width="1899" height="347" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589915697655" />
+    <state width="1899" height="347" key="GridCell.Tab.1.left" timestamp="1589915697655">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="347" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
-    <state width="1899" height="347" key="GridCell.Tab.1.right" timestamp="1589775635810">
+    <state width="1899" height="347" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589915697655" />
+    <state width="1899" height="347" key="GridCell.Tab.1.right" timestamp="1589915697655">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="347" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589775635810" />
+    <state width="1899" height="347" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589915697655" />
     <state x="147" y="170" key="SettingsEditor" timestamp="1589501194862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="147" y="170" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1589501194862" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1589518607498">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1589778788866">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589518607498" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589778788866" />
     <state x="740" y="233" key="git4idea.branch.GitSmartOperationDialog" timestamp="1589767580373">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
