@@ -63,7 +63,7 @@ class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
        # tk.Frame.__init__(self,*args, **kwargs)
         root = tk.Tk()
-        root.geometry("%dx%d+0+0" % (680, 600))
+        root.geometry("%dx%d+0+0" % (670, 600))
         gallery_panel = gallery(root)
        # captureMode_panel = captureMode(root)
         mainMenu_panel = mainMenu(root)

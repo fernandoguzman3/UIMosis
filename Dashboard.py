@@ -12,6 +12,8 @@ import imutils
 import cv2
 import numpy as np
 import os
+import socket
+import csv
 
 class Dashboard:
     def __init__(self, outputPath, root, vs, captureClass=None, sensorClass=None):
@@ -53,6 +55,20 @@ class Dashboard:
         self.snapShotProgress = tki.StringVar()
         
         self.mode = None
+        
+        self.setLed = tki.IntVar()
+                
+        #-------- Sensor variables
+        self.PH = tki.StringVar()
+        self.Pressure = tki.StringVar()
+        self.Lumin = tki.StringVar()
+        self.Temp = tki.StringVar()
+        self.activeSensorList = None
+        
+        #-------- Connection variables
+        self.host = '169.254.110.134'
+        self.port = 2304
+        self.s = None
         
     def initializeDashboard(self):
         
@@ -111,47 +127,77 @@ class Dashboard:
         btn = tki.Button(modeConfig_panel, text="Snapshot!", command=self.checkMode)
         btn.pack(side="bottom", fill="none", padx=2, pady=2)
         
-        mode_label = tki.Label(modeConfig_panel, text= "", textvariable=self.snapShotProgress, width= 10,font=("Courier", 9))
-        mode_label.pack(side = "bottom",fill="x", padx=2, pady=2)
+        mode1_label = tki.Label(modeConfig_panel, text= "", textvariable=self.snapShotProgress, bg='#46637B', fg='white', width= 5,font=("Courier", 9))
+        mode1_label.pack(side = "bottom",fill="x", padx=2, pady=2)
         
         mode_label = tki.Label(modeConfig_panelU, text= "Mode: ", width= 10)
         mode_label.pack(side = "left",fill="both", padx=2, pady=2)
         
-        mode_var_label = tki.Label(modeConfig_panelL, textvariable = self.sysMode, bg="#84A1B9", width = 10)
+        mode_var_label = tki.Label(modeConfig_panelU, textvariable = self.sysMode, bg='#46637B', fg='white', width = 10)
         mode_var_label.pack(side = "left", fill="both", padx=2, pady=2)
         
-        LED_mode_label = tki.Label(modeConfig_panelU, text= "LED mode: ")
-        LED_mode_label.pack(side = "left",fill="both", padx=2, pady=2)
+        selected_LED = tki.Label(modeConfig_panelL, text="LED: ", bg="#84A1B9", width = 10,font=("Courier", 7))
+        selected_LED.pack(side = "left", fill="both", padx=2, pady=2)
         
-        LED_var_label = tki.Label(modeConfig_panelL, textvariable = self.ledMode, bg="#84A1B9", width = 10)
-        LED_var_label.pack(side = "left",fill="both", padx=2, pady=2)
+        R1 = tki.Radiobutton(modeConfig_panelL, text="UV" , bg='#46637B',selectcolor='red', variable=self.setLed, value=int(1),
+                             fg='white', font=("Courier", 8))
+        R1.pack(side="left",fill="both", padx=5, pady=10)
+        
+        R2 = tki.Radiobutton(modeConfig_panelL, text="NIR" , bg='#46637B',selectcolor='red', variable=self.setLed, value=int(2),
+                             fg='white', font=("Courier", 8))
+        R2.pack(side="left",fill="both", padx=5, pady=10)
+        
+        R3 = tki.Radiobutton(modeConfig_panelL, text="FS_White" , bg='#46637B',selectcolor='red', variable=self.setLed, value=int(3),
+                             fg='white', font=("Courier", 8))
+        R3.pack(side="left",fill="both", padx=5, pady=10)
+        
+        R1.select()
+        
+        
+#         LED_mode_label = tki.Label(modeConfig_panelU, text= "LED mode: ")
+#         LED_mode_label.pack(side = "left",fill="both", padx=2, pady=2)
+#         
+#         LED_var_label = tki.Label(modeConfig_panelL, textvariable = self.ledMode, bg="#84A1B9", width = 10)
+#         LED_var_label.pack(side = "left",fill="both", padx=2, pady=2)
         
         #---------------- Sensor PANEL----------------------------------#
         
         #panel for the activated sensors
-        sensor_panel = tki.Frame(lower_panel, bg='#004000', width=200, height=100)
+        sensor_panel = tki.Frame(lower_panel, bg='#004000', width=50, height=100)
         sensor_panel.pack(side="left", fill="both", padx=2, pady=2)
         
-        act_sensor_label = tki.Label(sensor_panel, text= "Active Sensors")
+        act_sensor_label = tki.Label(sensor_panel, text= "Active Sensors", font=("Courier", 10))
         act_sensor_label.pack(side="top", fill="both", padx=5, pady=5)
         
-        sensor_panelU = tki.Frame(sensor_panel, bg='#004000',width=90)
+        sensor_panelU = tki.Frame(sensor_panel, bg='#004000', width=25)
         sensor_panelU.pack(side="left", fill="both", padx=5, pady=5)
         
-        sensor_panelR = tki.Frame(sensor_panel, bg='#004000', width=100)
+        sensor_panelR = tki.Frame(sensor_panel, bg='#004000',width=25)
         sensor_panelR.pack(side="left", fill="both", padx=5, pady=5)
         
-        PH_label = tki.Button(sensor_panelU, text= "PH",  bg='#84A1B9')
+        PH_label = tki.Label(sensor_panelU, text= "PH",  bg='#84A1B9')
         PH_label.pack(side="top", fill="both", padx=5, pady=5)
         
-        Pressure_label = tki.Button(sensor_panelU, text= 'Pressure', bg='#84A1B9')
+        PH_labelvar = tki.Label(sensor_panelU, textvariable=self.PH, text= "", bg='white',width = 5, font=("Courier", 9) )
+        PH_labelvar.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Pressure_label = tki.Label(sensor_panelU, text= 'Pressure', bg='#84A1B9')
         Pressure_label.pack(side="top", fill="both", padx=5, pady=5)
         
-        Temp_label = tki.Button(sensor_panelR, text= "Temp", bg='#84A1B9')
+        Pressure_labelvar = tki.Label(sensor_panelU, textvariable=self.Pressure, text= "", bg='white',width = 5,font=("Courier", 9) )
+        Pressure_labelvar.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Temp_label = tki.Label(sensor_panelR, text= "Temp", bg='#84A1B9')
         Temp_label.pack(side="top", fill="both", padx=5, pady=5)
         
-        Lumin_label = tki.Button(sensor_panelR, text="Lumin", bg='#84A1B9')
+        Temp_labelvar = tki.Label(sensor_panelR, textvariable=self.Temp, text= "", bg='white',width = 5, font=("Courier", 9))
+        Temp_labelvar.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Lumin_label = tki.Label(sensor_panelR, text="Lumin", bg='#84A1B9')
         Lumin_label.pack(side="top", fill="both", padx=5, pady=5)
+        
+        Lumin_labelvar = tki.Label(sensor_panelR, textvariable=self.Lumin, text= "", bg='white',width = 5,font=("Courier", 9))
+        Lumin_labelvar.pack(side="top", fill="both", padx=5, pady=5)
         
         # start a thread that constantly pools the video sensor for
         # the most recently read frame
@@ -169,6 +215,9 @@ class Dashboard:
 
     def videoLoop(self):
         self.vs.start()
+        
+        self.establishCommunication() #establish communication
+        
         logging.debug('starting')
         # DISCLAIMER:
         # I'm not a GUI developer, nor do I even pretend to be. This
@@ -182,6 +231,8 @@ class Dashboard:
                 # have a maximum width of 300 pixels
                 
                 self.sysMode.set(self.getsystemMode())
+                
+                self.updateSensorLabels()
                 
                 self.frame = self.vs.read()
                 
@@ -388,3 +439,30 @@ class Dashboard:
             return "Time Lapse"
         elif(self.mode == int(4)):
             return "Image Stack"
+        
+    def establishCommunication(self):
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.connect((self.host, self.port))
+    
+    def getActiveSensors(self):
+        self.activeSensorList = self.sensorInfo.getActiveSensors()
+    
+    def updateSensorLabels(self):
+        activeSensorList = self.sensorInfo.getActiveSensors()
+        sensorString = ""
+        for sensor in activeSensorList:
+            if(activeSensorList[sensor] != 0):
+                sensorString += " " + sensor
+        s.send(str.encode(command))
+        reply = s.recv(1024)
+        splitReply = [x.strip() for x in reply.split(',')]
+        self.Temp.set(activeSensorList['TEMPERATURE'])
+        self.PH.set(activeSensorList['PH'])
+        self.Lumin.set(activeSensorList['LUMINOSITY'])
+        self.Pressure.set(activeSensorList['PRESSURE'])
+        
+        
+        
+        
+        
+
