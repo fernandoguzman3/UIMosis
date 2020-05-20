@@ -77,6 +77,10 @@ class Col1Buttons:
 class Col2Buttons:
     col1_buttons = None
     menu_state = False
+    dashboard = None
+
+    def set_dashboard(self, dash):
+        self.dashboard = dash
 
     def set_col1_buttons(self, col1):
         self.col1_buttons = col1
@@ -106,8 +110,9 @@ class Col2Buttons:
             else:
                 b7.configure(bg='#46637B', fg="white")
             print("Menu_state " + str(self.menu_state))
-        def idk_com():
-            print("IDK")
+        def capture_com():
+            self.dashboard.takeSnapshot()
+            print("SNAP")
 
         b5 = Button(col2_frame, text="YES", width=b_width, height=b_height, bg='#46637B', fg='white',
                     font=("Courier", 10), command=yes_com)
@@ -121,8 +126,8 @@ class Col2Buttons:
                     font=("Courier", 10), command=menu_com)
         b7.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
-        b8 = Button(col2_frame, text="idk", width=b_width, height=b_height, bg='#46637B', fg='white',
-                    font=("Courier", 10), command=idk_com)
+        b8 = Button(col2_frame, text="SNAP", width=b_width, height=b_height, bg='#46637B', fg='white',
+                    font=("Courier", 10), command=capture_com)
         b8.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
 

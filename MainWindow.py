@@ -63,6 +63,8 @@ class dashboard:
        # print(type(self.page.initalizeDashboard(root,vs)))
         return self.page.initializeDashboard()
 
+    def get_Page(self):
+        return self.page
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
        # tk.Frame.__init__(self,*args, **kwargs)
@@ -153,6 +155,7 @@ class MainView(tk.Frame):
         panel_list = [master_panel, captureMode_panel, sensorMode_panel, gallery_panel, dashboard_panel]
 
         buttons_1.set_panel_list(panel_list)
+        buttons_2.set_dashboard(d.get_Page())
 
         buttons_1.set_col2_buttons(buttons_2)
         buttons_2.set_col1_buttons(buttons_1)
