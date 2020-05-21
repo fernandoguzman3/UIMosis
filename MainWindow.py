@@ -4,6 +4,7 @@ from MainMenuUI import MainMenuUI
 from SensorModeUI import SensorModeUI
 from Gallery import Gallery
 from Dashboard import Dashboard
+from DiagnosticsUI import DiagnosticsUI
 from imutils.video import VideoStream
 import time
 
@@ -28,6 +29,13 @@ class captureMode:
     
    def getInstance(self):
        return self.page
+
+class diagnosticMode:
+    def __init__(self, root):
+        self.page = DiagnosticsUI(root)
+
+    def returnDiagnosicsUI(self):
+        return self.page.DiagnosticsView()
 
 class sensorMode:
    def __init__(self, root, *args, **kwargs):
@@ -122,7 +130,10 @@ class MainView(tk.Frame):
         
         d = dashboard(root, c.getInstance(), s.getInstance())
         dashboard_panel = d.returnPage()
-        
+
+        diag = diagnosticMode(root)
+        diagnostics_panel = diag.returnDiagnosicsUI()
+
         buttonframe = tk.Frame(root)
         container = tk.Frame(root)
         buttonframe.pack(side="top", fill="x", expand=False)
@@ -133,18 +144,21 @@ class MainView(tk.Frame):
         sensorMode_panel.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         gallery_panel.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         dashboard_panel.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        diagnostics_panel.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
 
         b1 = tk.Button(buttonframe, text="Main Menu", command=master_panel.lift)
         b2 = tk.Button(buttonframe, text="Capture Mode", command=captureMode_panel.lift)
         b3 = tk.Button(buttonframe, text="Sensor Mode", command=sensorMode_panel.lift)
         b4 = tk.Button(buttonframe, text="Gallery", command=gallery_panel.lift)
         b5 = tk.Button(buttonframe, text="Dashboard", command=dashboard_panel.lift)
+        b6 = tk.Button(buttonframe, text="Diagnostics", command=diagnostics_panel.lift)
 
         b1.pack(side="left")
         b2.pack(side="left")
         b3.pack(side="left")
         b4.pack(side="left")
         b5.pack(side="left")
+        b6.pack(side="left")
 
         master_panel.lift()
         root.mainloop()
