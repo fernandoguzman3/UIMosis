@@ -2,7 +2,7 @@ import socket
 import csv
 from datetime import datetime
 
-host = '169.254.110.134'
+host = '169.254.56.207'
 port = 2304
 
 temp = "" # Unit: Celsius

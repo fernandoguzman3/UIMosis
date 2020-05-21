@@ -15,6 +15,9 @@ import os
 import socket
 import csv
 
+host = '169.254.56.207'
+port = 2304
+s = None
 class Dashboard:
     def __init__(self, outputPath, root, vs, captureClass=None, sensorClass=None):
         logging.basicConfig(level=logging.DEBUG,
@@ -65,10 +68,7 @@ class Dashboard:
         self.Temp = tki.StringVar()
         self.activeSensorList = None
         
-        #-------- Connection variables
-        self.host = '169.254.110.134'
-        self.port = 2304
-        self.s = None
+        
         
     def initializeDashboard(self):
         
@@ -441,25 +441,32 @@ class Dashboard:
             return "Image Stack"
         
     def establishCommunication(self):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.host, self.port))
+        global host
+        global port
+        global s
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((host, port))
     
     def getActiveSensors(self):
         self.activeSensorList = self.sensorInfo.getActiveSensors()
     
     def updateSensorLabels(self):
+        global s
         activeSensorList = self.sensorInfo.getActiveSensors()
-        sensorString = ""
+        sensorString = "GET"
         for sensor in activeSensorList:
             if(activeSensorList[sensor] != 0):
                 sensorString += " " + sensor
-        s.send(str.encode(command))
+        s.send(str.encode(sensorString))
         reply = s.recv(1024)
-        splitReply = [x.strip() for x in reply.split(',')]
-        self.Temp.set(activeSensorList['TEMPERATURE'])
-        self.PH.set(activeSensorList['PH'])
-        self.Lumin.set(activeSensorList['LUMINOSITY'])
-        self.Pressure.set(activeSensorList['PRESSURE'])
+        decodedReply = reply.decode('utf-8')
+        splitReply = [x.strip() for x in decodedReply.split(',')]
+        print(splitReply)
+        self.Temp.set(splitReply[0])
+        self.PH.set(splitReply[1])
+        self.Lumin.set(splitReply[2])
+        self.Pressure.set(splitReply[3])
         
         
         
