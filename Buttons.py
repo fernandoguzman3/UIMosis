@@ -95,40 +95,40 @@ class Col2Buttons:
         x_pad = 5
         y_pad = 50
 
-        # Buttons on the Second Column
-        col2_frame = Frame(root, bg='#84A1B9')
-        col2_frame.pack(side="right", fill="y")
+    def yes_com():
+        print("YES")
+    def no_com():
+        print("NO")
+    def menu_com():
+        self.menu_state = not self.menu_state
+        if self.menu_state:
+            b7.configure(bg="white", fg='#46637B')
+        else:
+            b7.configure(bg='#46637B', fg="white")
+        print("Menu_state " + str(self.menu_state))
+    def capture_com():
+        self.dashboard.takeSnapshot()
+        print("SNAP")
 
-        def yes_com():
-            print("YES")
-        def no_com():
-            print("NO")
-        def menu_com():
-            self.menu_state = not self.menu_state
-            if self.menu_state:
-                b7.configure(bg="white", fg='#46637B')
-            else:
-                b7.configure(bg='#46637B', fg="white")
-            print("Menu_state " + str(self.menu_state))
-        def capture_com():
-            self.dashboard.takeSnapshot()
-            print("SNAP")
+    # Buttons on the Second Column
+    col2_frame = Frame(self.root, bg='#84A1B9')
+    col2_frame.pack(side="right", fill="y")
 
-        b5 = Button(col2_frame, text="YES", width=b_width, height=b_height, bg='#46637B', fg='white',
-                    font=("Courier", 10), command=yes_com)
-        b5.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
+    b5 = Button(col2_frame, text="YES", width=b_width, height=b_height, bg='#46637B', fg='white',
+                font=("Courier", 10), command=yes_com)
+    b5.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
-        b6 = Button(col2_frame, text="NO", width=b_width, height=b_height, bg='#46637B', fg='white',
-                    font=("Courier", 10), command=no_com)
-        b6.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
+    b6 = Button(col2_frame, text="NO", width=b_width, height=b_height, bg='#46637B', fg='white',
+                font=("Courier", 10), command=no_com)
+    b6.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
-        b7 = Button(col2_frame, text="MENU", width=b_width, height=b_height, bg='#46637B', fg='white',
-                    font=("Courier", 10), command=menu_com)
-        b7.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
+    b7 = Button(col2_frame, text="MENU", width=b_width, height=b_height, bg='#46637B', fg='white',
+                font=("Courier", 10), command=menu_com)
+    b7.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
-        b8 = Button(col2_frame, text="SNAP", width=b_width, height=b_height, bg='#46637B', fg='white',
-                    font=("Courier", 10), command=capture_com)
-        b8.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
+    b8 = Button(col2_frame, text="SNAP", width=b_width, height=b_height, bg='#46637B', fg='white',
+                font=("Courier", 10), command=capture_com)
+    b8.pack(side="top", fill="both", padx=x_pad, pady=y_pad)
 
 
 # Buttons = Buttons()

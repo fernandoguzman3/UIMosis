@@ -4,8 +4,9 @@ from MainMenuUI import MainMenuUI
 from SensorModeUI import SensorModeUI
 from Gallery import Gallery
 from Dashboard import Dashboard
-from Buttons import Col1Buttons
-from Buttons import Col2Buttons
+from Buttons2 import Col1Buttons, Col2Buttons
+# from Buttons import Col1Buttons
+# from Buttons import Col2Buttons
 from imutils.video import VideoStream
 import time
 
@@ -34,13 +35,7 @@ class gallery(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
        Gallery(self)
-
-# class col1Buttons(Page):
-#     def __init__(self, *args, **kwargs):
-#         Page.__init__(self, *args, **kwargs)
-#         Col1Buttons(self)
-#     def set_obj(self, obj):
-#         Col1Buttons.set_obj(Col1Buttons, obj)
+    
 
 # class col2Buttons(Page):
 #     def __init__(self, *args, **kwargs):
@@ -65,6 +60,7 @@ class dashboard:
 
     def get_Page(self):
         return self.page
+    
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
        # tk.Frame.__init__(self,*args, **kwargs)
@@ -74,10 +70,6 @@ class MainView(tk.Frame):
         captureMode_panel = captureMode(root)
         mainMenu_panel = mainMenu(root)
         sensorMode_panel = sensorMode(root)
-
-        #Control button set up
-        buttons_1 = Col1Buttons(root)
-        buttons_2 = Col2Buttons(root)
 
         # initialize the root window and image panel
         #self.root = root
@@ -104,28 +96,36 @@ class MainView(tk.Frame):
         panel2 = tk.Frame(master_panel, bg='#84A1B9')
         panel2.pack(fill="both", padx=20, pady=20)
         
-        captureMode_btn = tk.Button(panel2, text= "Capture Mode", width=10, height= 5, bg='#46637B', fg='white', font=("Courier", 14),
+        captureMode_btn = tk.Button(panel2, text= "Capture Mode", width=10, height= 5, bg='#46637B', fg='white', font=("Courier", 10),
                                    )
-        captureMode_btn.pack(side="left",fill="both", padx=90, pady=10)
+        captureMode_btn.pack(side="left",fill="both", padx=80, pady=10)
         
-        gallery_btn = tk.Button(panel2, text= "Gallery",bg='#46637B', width=10, height= 5, fg='white', font=("Courier", 14))
-        gallery_btn.pack(side="left",fill="both", padx=100, pady=10)
+        gallery_btn = tk.Button(panel2, text= "Gallery",bg='#46637B', width=10, height= 5, fg='white', font=("Courier", 10))
+        gallery_btn.pack(side="left",fill="both", padx=80, pady=10)
 
         # ---------------- Third Panel ----------------------------------
         panel3 = tk.Frame(master_panel, bg='#84A1B9')
         panel3.pack(fill="both", padx=20, pady=20)
         
-        sensorMode_btn = tk.Button(panel3, text= "Sensor Mode", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 14),
+        sensorMode_btn = tk.Button(panel3, text= "Sensor Mode", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 10),
                                    )
-        sensorMode_btn.pack(side="left",fill="both", padx=90, pady=10)
+        sensorMode_btn.pack(side="left",fill="both", padx=80, pady=10)
         
-        diagnostics_btn = tk.Button(panel3, text= "Diagnostics", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 14))
-        diagnostics_btn.pack(side="left",fill="both", padx=100, pady=10)
+        diagnostics_btn = tk.Button(panel3, text= "Diagnostics", width=10, height= 5,bg='#46637B', fg='white', font=("Courier", 10))
+        diagnostics_btn.pack(side="left",fill="both", padx=80, pady=10)
  #---------------------------------------------------------------------------------------------------------
         d = dashboard(root)
         print(type(d))
         dashboard_panel = d.returnPage()
         print(type(dashboard_panel))
+        
+        panelList = [ master_panel, captureMode_panel, sensorMode_panel, gallery_panel, dashboard_panel]
+        
+        #Control button set up
+        buttons_1 = Col1Buttons(root, panelList)
+        buttons_1.initializeButtonColumn1()
+        buttons_2 = Col2Buttons(root, master_panel, dashboard_panel)
+        buttons_2.initializeButtonColumn2()
         
         buttonframe = tk.Frame(root)
         container = tk.Frame(root)
@@ -154,11 +154,11 @@ class MainView(tk.Frame):
 
         panel_list = [master_panel, captureMode_panel, sensorMode_panel, gallery_panel, dashboard_panel]
 
-        buttons_1.set_panel_list(panel_list)
-        buttons_2.set_dashboard(d.get_Page())
-
-        buttons_1.set_col2_buttons(buttons_2)
-        buttons_2.set_col1_buttons(buttons_1)
+#         buttons_1.set_panel_list(panel_list)
+#         buttons_2.set_dashboard(d.get_Page())
+# 
+#         buttons_1.set_col2_buttons(buttons_2)
+#         buttons_2.set_col1_buttons(buttons_1)
 
         root.mainloop()
 
