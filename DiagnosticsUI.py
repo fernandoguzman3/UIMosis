@@ -1,16 +1,11 @@
 import tkinter as tk
 
-
-
-
-
 class DiagnosticsUI:
 
     def __init__(self, root):
         self.root = root
 
     def DiagnosticsView(self):
-
 
         self.master_panel = tk.Frame(self.root, bg='#46637B', height=600, width=800)
         self.master_panel.pack(fill="both")

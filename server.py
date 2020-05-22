@@ -103,7 +103,6 @@ def GET(dataMessage):
         reply = reply + "," + str(leak)
     else:
         reply = reply + ", - "
-    
 
     return reply
 

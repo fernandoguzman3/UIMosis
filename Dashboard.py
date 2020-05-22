@@ -1,5 +1,6 @@
 # import the necessary packages
 from __future__ import print_function
+import RPi.GPIO as GPIO  
 from PIL import Image
 from PIL import ImageTk
 from PIL import ImageEnhance
@@ -15,11 +16,8 @@ import os
 import socket
 import csv
 
-host = '169.254.56.207'
-port = 2304
-s = None
 class Dashboard:
-    def __init__(self, outputPath, root, vs, captureClass=None, sensorClass=None):
+    def __init__(self, outputPath, root, vs, captureClass=None, sensorClass=None, galleryClass=None):
         logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
                     )
@@ -46,6 +44,29 @@ class Dashboard:
         
         self.captureInfo = captureClass
         self.sensorInfo = sensorClass
+        self.galleryInfo = galleryClass
+        
+        # ------------Defining LEDs-------------------------------
+        self.LedUV = 14                      # LED set to pin #10
+        self.LedNIR = 15
+        self.LedWhite = 18
+        LedConnect = 5
+        LedLeak = 6
+        LedBattery = 13
+        LedSpace = 19
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)      # Configure pin layout to board's physical layout
+        
+        GPIO.setup(self.LedUV,GPIO.OUT)      # Set LED pin to output
+        GPIO.setup(self.LedNIR ,GPIO.OUT)
+        GPIO.setup(self.LedWhite,GPIO.OUT)
+        GPIO.setup(LedConnect,GPIO.OUT)
+        GPIO.setup(LedLeak,GPIO.OUT)
+        GPIO.setup(LedBattery,GPIO.OUT)
+        GPIO.setup(LedSpace,GPIO.OUT)
+        
+        self.activeLED = self.LedWhite
+
         
         #--------- UI elements variables
         self.zoom = False
@@ -68,7 +89,10 @@ class Dashboard:
         self.Temp = tki.StringVar()
         self.activeSensorList = None
         
-        
+        #-------- Connection variables
+        self.host = '169.254.110.134'
+        self.port = 2304
+        self.s = None
         
     def initializeDashboard(self):
         
@@ -140,18 +164,21 @@ class Dashboard:
         selected_LED.pack(side = "left", fill="both", padx=2, pady=2)
         
         R1 = tki.Radiobutton(modeConfig_panelL, text="UV" , bg='#46637B',selectcolor='red', variable=self.setLed, value=int(1),
-                             fg='white', font=("Courier", 8))
+                             fg='white', font=("Courier", 8), command=self.changeLED)
         R1.pack(side="left",fill="both", padx=5, pady=10)
         
         R2 = tki.Radiobutton(modeConfig_panelL, text="NIR" , bg='#46637B',selectcolor='red', variable=self.setLed, value=int(2),
-                             fg='white', font=("Courier", 8))
+                             fg='white', font=("Courier", 8), command=self.changeLED)
         R2.pack(side="left",fill="both", padx=5, pady=10)
         
         R3 = tki.Radiobutton(modeConfig_panelL, text="FS_White" , bg='#46637B',selectcolor='red', variable=self.setLed, value=int(3),
-                             fg='white', font=("Courier", 8))
+                             fg='white', font=("Courier", 8), command=self.changeLED)
         R3.pack(side="left",fill="both", padx=5, pady=10)
         
-        R1.select()
+        GPIO.output(self.LedWhite, GPIO.LOW)
+        GPIO.output(self.LedUV, GPIO.LOW)
+        GPIO.output(self.LedNIR, GPIO.LOW)
+        R3.invoke()
         
         
 #         LED_mode_label = tki.Label(modeConfig_panelU, text= "LED mode: ")
@@ -216,7 +243,7 @@ class Dashboard:
     def videoLoop(self):
         self.vs.start()
         
-        self.establishCommunication() #establish communication
+     #   self.establishCommunication() #establish communication
         
         logging.debug('starting')
         # DISCLAIMER:
@@ -232,7 +259,7 @@ class Dashboard:
                 
                 self.sysMode.set(self.getsystemMode())
                 
-                self.updateSensorLabels()
+           #     self.updateSensorLabels()
                 
                 self.frame = self.vs.read()
                 
@@ -333,10 +360,11 @@ class Dashboard:
             self.takeSnapshot(self.outputPath)
             self.snapShotProgress.set("done!")
         elif(self.mode == 2):
-            t1 = threading.Thread(name='t2',target=self.takeBurstSnapshot, args=(self.captureInfo.getBurstModeValues()))
-            t1.start()
-            t1.join()
-            logging.debug('joined burst mode thread')
+          #  t1 = threading.Thread(name='t2',target=self.takeBurstSnapshot, args=(self.captureInfo.getBurstModeValues()))
+          #  t1.start()
+          #  t1.join()
+            self.takeBurstSnapshot(self.captureInfo.getBurstModeValues())
+          #  logging.debug('joined burst mode thread')
             self.snapShotProgress.set("done!")
                 
         elif(self.mode == 3):
@@ -355,15 +383,15 @@ class Dashboard:
         picsRage = int(pics)
 #         pics = int(self.captureInfo.getBurstModeValues())
         logging.debug('2')
-        foldername = "{}".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
-        outputPath = "Media/Images/Burst"
-        logging.debug('3')
-        p = os.path.sep.join((outputPath, foldername))
+   #     foldername = "{}".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
+        outputPath = "Media/Images"
+      #  logging.debug('3')
+     #   p = os.path.sep.join((outputPath, foldername))
         logging.debug('4')
-        os.makedirs(p)
+     #   os.makedirs(p)
         logging.debug('into forloop')
         for pic in range(picsRage):
-            self.takeSnapshot(p)
+            self.takeSnapshot(outputPath)
             time.sleep(0.5)
        # self.snapShotProgress.set("done!")
         logging.debug('done')
@@ -378,7 +406,7 @@ class Dashboard:
         
         ts = datetime.datetime.now()
         foldername = "{}".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
-        outputPath = "Media/Images/TimeInterval"
+        outputPath = "Media/Images"
         p = os.path.sep.join((outputPath, foldername))
         os.makedirs(p)
         
@@ -419,7 +447,8 @@ class Dashboard:
             # save the file
             image.save(p)
             #cv2.imwrite(p, image)
-            print("[INFO] saved {}".format(filename))       
+            print("[INFO] saved {}".format(filename))
+            self.galleryInfo.getListOfFiles()
     
     def onClose(self):
             # set the stop event, cleanup the camera, and allow the rest of
@@ -428,6 +457,19 @@ class Dashboard:
             self.stopEvent.set()
             self.vs.stop()
             self.root.quit()
+    
+    def changeLED(self):
+        previousLed = self.activeLED
+        if(self.setLed.get() == 1):
+            self.activeLED = self.LedWhite
+        elif(self.setLed.get() == 2):
+            self.activeLED = self.LedUV
+        elif(self.setLed.get() == 3):
+            self.activeLED = self.LedNIR
+        
+        GPIO.output(previousLed, GPIO.LOW)
+        GPIO.output(self.activeLED, GPIO.HIGH)
+            
     
     def getsystemMode(self):
         self.mode = self.captureInfo.getCaptureModeValues()
@@ -441,32 +483,25 @@ class Dashboard:
             return "Image Stack"
         
     def establishCommunication(self):
-        global host
-        global port
-        global s
-
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, port))
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.connect((self.host, self.port))
     
     def getActiveSensors(self):
         self.activeSensorList = self.sensorInfo.getActiveSensors()
     
     def updateSensorLabels(self):
-        global s
         activeSensorList = self.sensorInfo.getActiveSensors()
-        sensorString = "GET"
+        sensorString = ""
         for sensor in activeSensorList:
             if(activeSensorList[sensor] != 0):
                 sensorString += " " + sensor
-        s.send(str.encode(sensorString))
+        s.send(str.encode(command))
         reply = s.recv(1024)
-        decodedReply = reply.decode('utf-8')
-        splitReply = [x.strip() for x in decodedReply.split(',')]
-        print(splitReply)
-        self.Temp.set(splitReply[0])
-        self.PH.set(splitReply[1])
-        self.Lumin.set(splitReply[2])
-        self.Pressure.set(splitReply[3])
+        splitReply = [x.strip() for x in reply.split(',')]
+        self.Temp.set(activeSensorList['TEMPERATURE'])
+        self.PH.set(activeSensorList['PH'])
+        self.Lumin.set(activeSensorList['LUMINOSITY'])
+        self.Pressure.set(activeSensorList['PRESSURE'])
         
         
         

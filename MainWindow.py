@@ -33,7 +33,7 @@ class captureMode:
 class diagnosticMode:
     def __init__(self, root):
         self.page = DiagnosticsUI(root)
-
+        
     def returnDiagnosicsUI(self):
         return self.page.DiagnosticsView()
 
@@ -48,13 +48,19 @@ class sensorMode:
    def getInstance(self):
        return self.page
 
-class gallery(Page):
-   def __init__(self, *args, **kwargs):
-       Page.__init__(self, *args, **kwargs)
-       Gallery(self)
+class gallery:
+   def __init__(self, root, *args, **kwargs):
+     #  Page.__init__(self, *args, **kwargs)
+       self.page = Gallery(root)
+    
+   def returnPage(self):
+       return self.page.initializeGallery()
+    
+   def getInstance(self):
+       return self.page
 
 class dashboard:
-    def __init__(self, root, capture, sensor):
+    def __init__(self, root, capture, sensor, gallery):
     #   Page.__init__(self, *args, **kwargs)
     # initialize the video stream and allow the camera sensor to warmup
        print("[INFO] warming up camera...")
@@ -62,17 +68,17 @@ class dashboard:
        outputFolder = "Media/Images"
        # start the app
        vs = VideoStream(usePiCamera=False)
-       self.page = Dashboard(outputFolder, root, vs, capture, sensor)
+       self.page = Dashboard(outputFolder, root, vs, capture, sensor, gallery)
        
     def returnPage(self):
-        return self.page.initializeDashboard()
+       return self.page.initializeDashboard()
 
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
        # tk.Frame.__init__(self,*args, **kwargs)
         root = tk.Tk()
         root.geometry("%dx%d+0+0" % (670, 600))
-        gallery_panel = gallery(root)
+        
        # captureMode_panel = captureMode(root)
         mainMenu_panel = mainMenu(root)
     
@@ -128,12 +134,15 @@ class MainView(tk.Frame):
         s = sensorMode(root)
         sensorMode_panel = s.returnPage()
         
-        d = dashboard(root, c.getInstance(), s.getInstance())
+        g = gallery(root)
+        gallery_panel = g.returnPage()
+        
+        d = dashboard(root, c.getInstance(), s.getInstance(), g.getInstance())
         dashboard_panel = d.returnPage()
-
+        
         diag = diagnosticMode(root)
         diagnostics_panel = diag.returnDiagnosicsUI()
-
+        
         buttonframe = tk.Frame(root)
         container = tk.Frame(root)
         buttonframe.pack(side="top", fill="x", expand=False)
