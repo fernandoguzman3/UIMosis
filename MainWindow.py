@@ -8,6 +8,7 @@ from DiagnosticsUI import DiagnosticsUI
 from Buttons import Col1Buttons, Col2Buttons
 from imutils.video import VideoStream
 import time
+import socket
 
 class Page(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -32,8 +33,8 @@ class captureMode:
        return self.page
 
 class diagnosticMode:
-    def __init__(self, root):
-        self.page = DiagnosticsUI(root)
+    def __init__(self, root,conn):
+        self.page = DiagnosticsUI(root,conn)
         
     def returnDiagnosicsUI(self):
         return self.page.DiagnosticsView()
@@ -61,7 +62,7 @@ class gallery:
        return self.page
 
 class dashboard:
-    def __init__(self, root, capture, sensor, gallery):
+    def __init__(self, root, conn, capture, sensor, gallery):
     #   Page.__init__(self, *args, **kwargs)
     # initialize the video stream and allow the camera sensor to warmup
        print("[INFO] warming up camera...")
@@ -69,7 +70,7 @@ class dashboard:
        outputFolder = "Media/Images"
        # start the app
        vs = VideoStream(usePiCamera=False)
-       self.page = Dashboard(outputFolder, root, vs, capture, sensor, gallery)
+       self.page = Dashboard(outputFolder, root, vs,conn, capture, sensor, gallery)
        
     def returnPage(self):
        return self.page.initializeDashboard()
@@ -85,6 +86,9 @@ class MainView(tk.Frame):
         
        # captureMode_panel = captureMode(root)
         mainMenu_panel = mainMenu(root)
+        
+        self.host = '169.254.153.172'
+        self.port = 2304
     
          # initialize the root window and image panel
         #self.root = root
@@ -141,10 +145,12 @@ class MainView(tk.Frame):
         g = gallery(root)
         gallery_panel = g.returnPage()
         
-        d = dashboard(root, c.getInstance(), s.getInstance(), g.getInstance())
+        conn = self.establishCommunication()
+        
+        d = dashboard(root, conn, c.getInstance(), s.getInstance(), g.getInstance())
         dashboard_panel = d.returnPage()
         
-        diag = diagnosticMode(root)
+        diag = diagnosticMode(root, conn)
         diagnostics_panel = diag.returnDiagnosicsUI()
         
         panelList = [ master_panel, captureMode_panel, sensorMode_panel, gallery_panel, dashboard_panel, diagnostics_panel]    
@@ -183,6 +189,12 @@ class MainView(tk.Frame):
 
         master_panel.lift()
         root.mainloop()
+    
+        
+    def establishCommunication(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((self.host, self.port))
+        return s
 
 if __name__ == "__main__":
 #     root = tk.Tk()

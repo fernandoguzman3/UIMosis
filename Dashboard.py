@@ -17,7 +17,7 @@ import socket
 import csv
 
 class Dashboard:
-    def __init__(self, outputPath, root, vs, captureClass=None, sensorClass=None, galleryClass=None):
+    def __init__(self, outputPath, root, vs, s, captureClass=None, sensorClass=None, galleryClass=None):
         logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
                     )
@@ -50,20 +50,20 @@ class Dashboard:
         self.LedUV = 14                      # LED set to pin #10
         self.LedNIR = 15
         self.LedWhite = 18
-        LedConnect = 5
-        LedLeak = 6
-        LedBattery = 13
-        LedSpace = 19
+        self.LedConnect = 5
+        self.LedLeak = 6
+        self.LedBattery = 13
+        self.LedSpace = 19
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)      # Configure pin layout to board's physical layout
         
         GPIO.setup(self.LedUV,GPIO.OUT)      # Set LED pin to output
         GPIO.setup(self.LedNIR ,GPIO.OUT)
         GPIO.setup(self.LedWhite,GPIO.OUT)
-        GPIO.setup(LedConnect,GPIO.OUT)
-        GPIO.setup(LedLeak,GPIO.OUT)
-        GPIO.setup(LedBattery,GPIO.OUT)
-        GPIO.setup(LedSpace,GPIO.OUT)
+        GPIO.setup(self.LedConnect,GPIO.OUT)
+        GPIO.setup(self.LedLeak,GPIO.OUT)
+        GPIO.setup(self.LedBattery,GPIO.OUT)
+        GPIO.setup(self.LedSpace,GPIO.OUT)
         
         self.activeLED = self.LedWhite
 
@@ -90,9 +90,9 @@ class Dashboard:
         self.activeSensorList = None
         
         #-------- Connection variables
-        self.host = '169.254.110.134'
+        self.host = '169.254.153.172'
         self.port = 2304
-        self.s = None
+        self.s = s
         
     def initializeDashboard(self):
         
@@ -180,6 +180,11 @@ class Dashboard:
         GPIO.output(self.LedNIR, GPIO.LOW)
         R3.invoke()
         
+        GPIO.output(self.LedConnect, GPIO.LOW)
+        GPIO.output(self.LedLeak, GPIO.HIGH)
+        GPIO.output(self.LedBattery, GPIO.HIGH)
+        GPIO.output(self.LedSpace, GPIO.HIGH)
+        
         
 #         LED_mode_label = tki.Label(modeConfig_panelU, text= "LED mode: ")
 #         LED_mode_label.pack(side = "left",fill="both", padx=2, pady=2)
@@ -259,7 +264,7 @@ class Dashboard:
                 
                 self.sysMode.set(self.getsystemMode())
                 
-           #     self.updateSensorLabels()
+                self.updateSensorLabels()
                 
                 self.frame = self.vs.read()
                 
@@ -482,9 +487,9 @@ class Dashboard:
         elif(self.mode == int(4)):
             return "Image Stack"
         
-    def establishCommunication(self):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.host, self.port))
+#     def establishCommunication(self):
+#         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#         self.s.connect((self.host, self.port))
     
     def getActiveSensors(self):
         self.activeSensorList = self.sensorInfo.getActiveSensors()
@@ -495,13 +500,16 @@ class Dashboard:
         for sensor in activeSensorList:
             if(activeSensorList[sensor] != 0):
                 sensorString += " " + sensor
-        s.send(str.encode(command))
-        reply = s.recv(1024)
+        command = "GET"+sensorString
+     #   print(command)
+        self.s.send(str.encode(command))
+        reply = self.s.recv(1024)
+        reply = reply.decode('utf-8')
         splitReply = [x.strip() for x in reply.split(',')]
-        self.Temp.set(activeSensorList['TEMPERATURE'])
-        self.PH.set(activeSensorList['PH'])
-        self.Lumin.set(activeSensorList['LUMINOSITY'])
-        self.Pressure.set(activeSensorList['PRESSURE'])
+        self.Temp.set(splitReply[0])
+        self.PH.set(splitReply[1])
+        self.Lumin.set(splitReply[2])
+        self.Pressure.set(splitReply[3])
         
         
         
